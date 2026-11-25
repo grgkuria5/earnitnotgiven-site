@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateNote from '../components/TemplateNote.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Warranty" description="Shop warranty template for Earn It Not Given. Not legal advice." path="/warranty">
+  <div class="wrap prose section">
+    <TemplateNote />
+    <h1>Warranty</h1>
+    <p>A product page shows 0, 30, or 90 days. Zero means no shop warranty beyond the returns window. This text is a template.</p>
+    <p>During the days shown on the listing, email {settings.sales_email} if the item stops doing what the listing said it did, and it was not damaged after delivery. George will repair, replace, or refund that item. The optional add-on, when a price and payment link are on the product, is extra time or coverage he describes on that listing. It is a separate payment.</p>
+    <p>This is not a manufacturer warranty and not a promise that a used battery will last a set number of hours unless the listing says so.</p>
+  </div>
+</BaseLayout>

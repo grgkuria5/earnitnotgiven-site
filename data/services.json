@@ -1,0 +1,41 @@
+{
+  "area_note": "In-person help in Palo Alto and nearby mid-Peninsula towns. Remote help is available for setup questions when a visit is not needed.",
+  "experience_note": "George has 10+ years of desktop support experience.",
+  "services": [
+    {
+      "title": "PC & laptop setup",
+      "summary": "A new or used computer, out of the box: accounts, updates, and the everyday apps you actually use.",
+      "price_label": "Ask for quote"
+    },
+    {
+      "title": "Wi-Fi & network fixes",
+      "summary": "Slow Wi-Fi, dropped connections, a new router, or a printer that will not stay online.",
+      "price_label": "Ask for quote"
+    },
+    {
+      "title": "Data transfer & backup",
+      "summary": "Move photos and files to a new computer, and set a backup so the next failure is boring.",
+      "price_label": "Ask for quote"
+    },
+    {
+      "title": "Virus cleanup",
+      "summary": "Remove unwanted software, check what is starting with Windows, and get the machine usable again.",
+      "price_label": "Ask for quote"
+    },
+    {
+      "title": "Windows reinstall, wipe & reload",
+      "summary": "A clean Windows install when cleanup is not enough. Your files are copied off first when you want them kept.",
+      "price_label": "Ask for quote"
+    },
+    {
+      "title": "Phone setup",
+      "summary": "Move to a new phone, sign in, and leave it ready for calls, photos, and the apps you use.",
+      "price_label": "Ask for quote"
+    },
+    {
+      "title": "Smart home setup",
+      "summary": "Speakers, lights, doorbells, and the Wi-Fi they depend on, set up in plain language.",
+      "price_label": "Ask for quote"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Catalog from '../components/Catalog.astro';
+import { allProducts } from '../lib/site';
+const products = (await allProducts()).filter((product) => product.data.product_type === 'bundle');
+---
+<BaseLayout title="Bundles" description="Bundles from Earn It Not Given with the included items and the savings on the card." path="/bundles">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span>Bundles</span></nav>
+    <h1>Bundles</h1>
+    <p class="muted">A bundle lists what is included and the price for the set. Sample bundles are not for sale.</p>
+    {products.length ? <Catalog products={products} /> : <p class="empty">No bundles yet.</p>}
+  </div>
+</BaseLayout>

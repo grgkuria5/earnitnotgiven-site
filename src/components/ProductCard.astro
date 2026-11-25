@@ -1,0 +1,46 @@
+---
+import { flashPercent, money, effectivePrice, parsePacific } from '../lib/pure';
+import { productHref, type ProductEntry } from '../lib/site';
+const { product, flash = false } = Astro.props as { product: ProductEntry; flash?: boolean };
+const price = effectivePrice(product.data.price, product.data.sale_price);
+const onSale = typeof product.data.sale_price === 'number' && product.data.sale_price < product.data.price;
+const href = productHref(product);
+const image = product.data.images[0] || '';
+const search = `${product.data.title} ${product.data.brand} ${product.data.tags.join(' ')} ${product.data.summary}`.toLowerCase();
+const flashStart = flash ? parsePacific(product.data.flash_start) : null;
+const flashEnd = flash ? parsePacific(product.data.flash_end) : null;
+const flashPrice = flash && typeof product.data.flash_price === 'number' ? product.data.flash_price : null;
+const off = flashPrice ? flashPercent(product.data.price, flashPrice) : 0;
+---
+<article
+  class:list={['card', flash && 'flash-card']}
+  data-item
+  data-title={product.data.title}
+  data-price={flash && flashPrice ? flashPrice : price}
+  data-condition={product.data.condition}
+  data-type={product.data.product_type}
+  data-digital={product.data.digital ? 'true' : 'false'}
+  data-featured={product.data.featured ? '1' : '0'}
+  data-search={search}
+  data-brand={product.data.brand}
+  data-specs={product.data.specs.map((spec) => `${spec.name}=${spec.value}`).join('|')}
+  data-flash-start={flashStart ?? undefined}
+  data-flash-end={flashEnd ?? undefined}
+  data-flash-price={flashPrice ?? undefined}
+>
+  <a href={href}>
+    {image ? <img src={image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+    {product.data.sample && <span class="flag">Sample</span>}
+    {flash && off > 0 && <span class="save">{off}% off</span>}
+    {!flash && product.data.product_type === 'bundle' && product.data.bundle_savings ? <span class="save">Save {money(product.data.bundle_savings)}</span> : null}
+  </a>
+  <h3><a href={href}>{product.data.title}</a></h3>
+  <p class="meta muted">{product.data.condition}{product.data.digital ? ' · Digital' : ''}</p>
+  <p class="price">
+    {(flash && flashPrice) ? <span class="was">{money(product.data.price)}</span> : onSale && <span class="was">{money(product.data.price)}</span>}
+    <span>{money(flash && flashPrice ? flashPrice : price)}</span>
+  </p>
+  {flash && <p class="countdown" data-countdown aria-live="polite">Checking the clock…</p>}
+  {flash && typeof product.data.flash_qty_limit === 'number' && <p class="left-label">{product.data.flash_qty_limit} left</p>}
+  {product.data.ai_assisted && <p class="ai-note">Made with AI assistance</p>}
+</article>

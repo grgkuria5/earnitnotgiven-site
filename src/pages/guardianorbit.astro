@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Orbit from '../components/Orbit.astro';
+import AppBadge from '../components/AppBadge.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="GuardianOrbit" description="GuardianOrbit is an upcoming iPhone and Apple Watch app from Earn It Not Given LLC: arrival and departure alerts, timed check-ins, and SOS to trusted contacts." path="/guardianorbit" tone="tech">
+  <div class="wrap section">
+    <div class="orbit-tile">
+      <Orbit />
+      <div>
+        <p class="eyebrow">iPhone and Apple Watch</p>
+        <h1>GuardianOrbit</h1>
+        <p>George is building GuardianOrbit for families who want a calmer way to know a teen arrived, left, or needs a trusted adult. It is a coordination app. It is not a medical device and it does not make health claims.</p>
+        <AppBadge href={settings.app_store_url} />
+      </div>
+    </div>
+    <div class="grid services">
+      <article class="service">
+        <h2>Arrival and departure alerts</h2>
+        <p>A note when someone in the family circle reaches a place they meant to go, or leaves it.</p>
+      </article>
+      <article class="service">
+        <h2>Timed check-ins</h2>
+        <p>A check-in that is due at a time you both agreed on, instead of a constant feed.</p>
+      </article>
+      <article class="service">
+        <h2>SOS to trusted contacts</h2>
+        <p>A way to reach the people already chosen as contacts. It does not contact emergency services by itself.</p>
+      </article>
+      <article class="service">
+        <h2>Privacy-first</h2>
+        <p>Location is for the people the family chooses to share it with. The shop site does not collect GuardianOrbit location data.</p>
+      </article>
+    </div>
+    <p class="muted">Questions: <a href={`mailto:${settings.contact_email}`}>{settings.contact_email}</a></p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { allProducts } from '../lib/site';
+const deals = (await allProducts()).filter(
+  (product) => typeof product.data.flash_price === 'number' && product.data.flash_start && product.data.flash_end,
+);
+---
+<BaseLayout title="Flash deals" description="Short-window prices from Earn It Not Given. Timers use Pacific Time and hide the deal when it ends." path="/deals" tone="tech">
+  <div class="wrap section" data-flash-strip>
+    <p class="eyebrow">Pacific Time</p>
+    <h1>Flash deals</h1>
+    <p class="muted">The price with the line through it is the regular price. The timer hides a deal before it starts and after it ends. Sample deals are not for sale.</p>
+    {deals.length ? (
+      <div class="grid cards">
+        {deals.map((product) => <ProductCard product={product} flash />)}
+      </div>
+    ) : <p class="empty">No flash deals are scheduled.</p>}
+    <p class="empty" data-empty hidden>Nothing is live at this hour. Check back when the next window opens.</p>
+  </div>
+</BaseLayout>

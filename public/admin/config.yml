@@ -1,0 +1,326 @@
+# GitHub OAuth only. Put the OAuth App client id here. Never put the client secret in this repo.
+# Sign-in is a GitHub personal access token kept in the browser, not in this repo.
+# GitHub has not shipped client-side PKCE, so there is no OAuth client id here and no client secret.
+backend:
+  name: github
+  repo: grgkuria5/earnitnotgiven-site
+  branch: main
+
+site_url: https://www.earnitnotgiven.com
+display_url: https://www.earnitnotgiven.com
+logo_url: /images/logo-mark.svg
+media_folder: public/media
+public_folder: /media
+slug:
+  encoding: unicode
+  clean_accents: true
+
+collections:
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: src/content/products
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    slug: "{{slug}}"
+    summary: "{{title}} · {{category}} · ${{price}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Category id, name: category, widget: string, hint: "Parent id from Categories, such as computers, phones, parts, clothing, or wall-art." }
+      - { label: Subcategory id, name: subcategory, widget: string, required: false, hint: "Child id, such as laptops, iphone, gpus, or tees. Leave blank if it sits on the parent only." }
+      - label: Condition
+        name: condition
+        widget: select
+        options: ["New", "Open Box", Refurbished, "Used - Like New", "Used - Good", "Used - Fair", Digital]
+      - { label: Price USD, name: price, widget: number, value_type: float, min: 0 }
+      - { label: Sale price USD, name: sale_price, widget: number, value_type: float, min: 0, required: false }
+      - { label: Flash price USD, name: flash_price, widget: number, value_type: float, min: 0, required: false, hint: "Deal price. PayPal charges this while the flash window is open." }
+      - { label: Flash start (Pacific Time), name: flash_start, widget: string, required: false, hint: "YYYY-MM-DDTHH:mm in Pacific Time, for example 2026-11-25T09:00. No zone suffix needed." }
+      - { label: Flash end (Pacific Time), name: flash_end, widget: string, required: false, hint: "YYYY-MM-DDTHH:mm in Pacific Time. The deal hides itself when this time passes." }
+      - { label: Flash quantity limit, name: flash_qty_limit, widget: number, value_type: int, min: 0, required: false, hint: "Optional. The card shows this number as “X left”." }
+      - { label: Flash Stripe Payment Link, name: flash_stripe_link, widget: string, required: false, hint: "https://buy.stripe.com/... used only during the flash window. Leave blank to keep the regular link." }
+      - label: Warranty days
+        name: warranty_days
+        widget: select
+        options: ["0", "30", "90"]
+        default: "0"
+        hint: "0, 30, or 90. Stored as a number."
+      - { label: Warranty add-on price USD, name: warranty_addon_price, widget: number, value_type: float, min: 0, required: false }
+      - { label: Warranty add-on Stripe link, name: warranty_stripe_link, widget: string, required: false }
+      - { label: Local pickup in Palo Alto, name: local_pickup, widget: boolean, default: false }
+      - { label: Pickup Stripe link, name: pickup_stripe_link, widget: string, required: false, hint: "Payment link with no shipping charge." }
+      - { label: GTIN, name: gtin, widget: string, required: false, hint: "Optional. Used on the Google product feed. Leave blank if you do not have one." }
+      - { label: Quantity, name: quantity, widget: number, value_type: int, min: 0, default: 1 }
+      - { label: Featured, name: featured, widget: boolean, default: false }
+      - { label: Sample placeholder, name: sample, widget: boolean, default: false, hint: "Sample listings show a Sample label and cannot be checked out." }
+      - { label: Draft, name: draft, widget: boolean, default: false, hint: "Draft products are not on the public site." }
+      - { label: SKU, name: sku, widget: string, required: false }
+      - { label: Brand, name: brand, widget: string, required: false }
+      - { label: Short summary, name: summary, widget: text, required: false }
+      - label: Specs
+        name: specs
+        widget: list
+        required: false
+        fields:
+          - { label: Name, name: name, widget: string }
+          - { label: Value, name: value, widget: string }
+      - label: Photos
+        name: images
+        widget: list
+        required: false
+        field: { label: Photo, name: image, widget: image, required: false }
+      - { label: Stripe Payment Link, name: stripe_payment_link, widget: string, required: false, hint: "https://buy.stripe.com/... Leave blank to hide card checkout." }
+      - { label: Allow PayPal, name: paypal_enabled, widget: boolean, default: true }
+      - { label: Also on Amazon URL, name: amazon_url, widget: string, required: false, hint: "Your own Amazon seller listing. Leave blank to hide the button. Not an Associates link." }
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+      - { label: Digital download, name: digital, widget: boolean, default: false }
+      - label: Product type
+        name: product_type
+        widget: select
+        default: standard
+        options: [standard, bundle]
+      - label: Bundle items
+        name: bundle_items
+        widget: list
+        required: false
+        hint: "Names of what is included. Used when type is bundle."
+        field: { label: Item, name: item, widget: string }
+      - { label: Bundle savings USD, name: bundle_savings, widget: number, value_type: float, min: 0, required: false, hint: "Optional badge. Do not invent a number you cannot explain." }
+      - { label: Etsy delivery URL, name: etsy_delivery_url, widget: string, required: false, hint: "For digital files that are delivered from an Etsy listing." }
+      - { label: Made with AI assistance, name: ai_assisted, widget: boolean, default: false }
+      - { label: Shipping note, name: shipping_note, widget: text, required: false }
+      - { label: Description, name: body, widget: markdown }
+
+  - name: guides
+    label: Guides
+    label_singular: Guide
+    folder: src/content/guides
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Date, name: date, widget: string, hint: "YYYY-MM-DD" }
+      - { label: Draft, name: draft, widget: boolean, default: true, hint: "Draft guides are not public and are not in the sitemap." }
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+      - label: Body
+        name: body
+        widget: markdown
+        hint: "Own product: [[product:slug]] on its own line. Affiliate placeholder: [[affiliate:amazon|Title|https://...|Note]]. Do not invent prices or star ratings."
+
+  - name: settings
+    label: Settings
+    files:
+      - label: Site settings
+        name: settings
+        file: data/settings.json
+        fields:
+          - { label: Business name, name: business_name, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: PayPal Business email, name: paypal_business_email, widget: string, hint: "Replace the placeholder before any real checkout." }
+          - { label: Amazon Associates tag, name: amazon_associates_tag, widget: string, required: false, hint: "Leave empty until Amazon approves you. Amazon Picks stay hidden." }
+          - { label: Newegg affiliate id, name: newegg_affiliate_id, widget: string, required: false }
+          - { label: Best Buy affiliate id, name: bestbuy_affiliate_id, widget: string, required: false }
+          - { label: B&H affiliate id, name: bh_affiliate_id, widget: string, required: false }
+          - { label: Other affiliate id, name: other_affiliate_id, widget: string, required: false }
+          - { label: App Store URL, name: app_store_url, widget: string, required: false, hint: "https://apps.apple.com/... Leave blank to keep Coming soon." }
+          - label: Theme
+            name: active_theme
+            widget: select
+            options: [default, holiday, sale]
+          - { label: Contact email, name: contact_email, widget: string }
+          - { label: Sales email, name: sales_email, widget: string }
+          - { label: Location label, name: location_label, widget: string }
+          - { label: Booking form endpoint, name: form_endpoint, widget: string, required: false, hint: "https Formspree or FormSubmit URL. No secrets. Blank uses email." }
+          - { label: Newsletter form action, name: newsletter_form_action, widget: string, required: false, hint: "https Mailchimp, Buttondown, or Formspree URL. Blank uses email." }
+          - { label: Newsletter email field name, name: newsletter_email_field, widget: string, default: email, hint: "Mailchimp often wants EMAIL." }
+          - { label: Welcome code, name: welcome_promo_code, widget: string }
+          - { label: Welcome percent, name: welcome_promo_percent, widget: number, value_type: int, min: 0, max: 90 }
+          - { label: Welcome message, name: welcome_promo_message, widget: string }
+          - { label: Chat AI endpoint, name: chat_ai_endpoint, widget: string, required: false, hint: "Leave blank. https only, never localhost, never an API key." }
+          - { label: Return window days, name: return_window_days, widget: number, value_type: int, min: 0, max: 365, default: 30 }
+          - { label: Google site verification, name: google_site_verification, widget: string, required: false, hint: "Search Console meta content only. Leave blank until you have it." }
+          - label: Analytics
+            name: analytics_provider
+            widget: select
+            options: ["", cloudflare, goatcounter]
+            default: ""
+            hint: "Leave blank. Cookieless. No banner is added."
+          - { label: Analytics token or GoatCounter host, name: analytics_token, widget: string, required: false, hint: "Cloudflare beacon token, or a host like yourname.goatcounter.com. Never a secret API key." }
+          - label: Promo codes
+            name: promo_codes
+            widget: list
+            fields:
+              - { label: Code, name: code, widget: string }
+              - { label: Label, name: label, widget: string }
+              - { label: Percent, name: percent, widget: number, value_type: int, min: 0, max: 90 }
+              - { label: Active, name: active, widget: boolean, default: true }
+
+  - name: services
+    label: Tech Help
+    files:
+      - label: Services
+        name: services
+        file: data/services.json
+        fields:
+          - { label: Service area note, name: area_note, widget: text }
+          - { label: Experience note, name: experience_note, widget: text }
+          - label: Services
+            name: services
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Summary, name: summary, widget: text }
+              - { label: Price label, name: price_label, widget: string, default: "Ask for quote" }
+
+  - name: faq
+    label: Chat FAQ
+    files:
+      - label: FAQ
+        name: faq
+        file: data/faq.json
+        fields:
+          - label: Answers
+            name: items
+            widget: list
+            fields:
+              - { label: Id, name: id, widget: string }
+              - { label: Question, name: question, widget: string }
+              - label: Keywords
+                name: keywords
+                widget: list
+                field: { label: Keyword, name: keyword, widget: string }
+              - { label: Answer, name: answer, widget: text }
+
+  - name: banners
+    label: Banners
+    files:
+      - label: Promo banner
+        name: banners
+        file: data/banners.json
+        fields:
+          - label: Banners
+            name: items
+            widget: list
+            fields:
+              - { label: Active, name: active, widget: boolean, default: true }
+              - { label: Text, name: text, widget: string }
+              - { label: Link, name: href, widget: string, required: false }
+              - { label: Link label, name: link_label, widget: string, required: false }
+
+  - name: etsy
+    label: Etsy designs
+    files:
+      - label: EarnItNotGiven designs
+        name: etsy
+        file: data/etsy-products.json
+        fields:
+          - label: Products
+            name: products
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Etsy URL, name: etsy_url, widget: string }
+              - { label: From price USD, name: from_price_usd, widget: number, value_type: float, min: 0 }
+              - { label: Image URL, name: image, widget: string, required: false }
+              - label: Tags
+                name: tags
+                widget: list
+                required: false
+                field: { label: Tag, name: tag, widget: string }
+              - { label: Made with AI assistance, name: ai_assisted, widget: boolean, default: false }
+
+  - name: categories
+    label: Categories
+    files:
+      - label: Category tree
+        name: categories
+        file: data/categories.json
+        hint: "Drag to reorder. Hide a row to take it out of the menu. Ids are what products use."
+        fields:
+          - label: Categories
+            name: categories
+            widget: list
+            fields:
+              - { label: Id, name: id, widget: string }
+              - { label: Label, name: label, widget: string }
+              - { label: Blurb, name: blurb, widget: text, required: false }
+              - label: Tone
+                name: tone
+                widget: select
+                options: [tech, fashion]
+                default: tech
+              - { label: Icon, name: icon, widget: string, default: tag }
+              - { label: Hidden, name: hidden, widget: boolean, default: false }
+              - label: Kind
+                name: kind
+                widget: select
+                options: [catalog, link, condition]
+                default: catalog
+              - { label: Link, name: href, widget: string, required: false, hint: "Only for kind link, such as /deals." }
+              - { label: Google taxonomy, name: google_taxonomy, widget: string }
+              - label: Subcategories
+                name: children
+                widget: list
+                fields:
+                  - { label: Id, name: id, widget: string }
+                  - { label: Label, name: label, widget: string }
+                  - { label: Blurb, name: blurb, widget: text, required: false }
+                  - { label: Tone, name: tone, widget: select, options: [tech, fashion], default: tech }
+                  - { label: Icon, name: icon, widget: string, default: tag }
+                  - { label: Hidden, name: hidden, widget: boolean, default: false }
+                  - { label: Google taxonomy, name: google_taxonomy, widget: string }
+
+  - name: reviews
+    label: Reviews
+    files:
+      - label: Product reviews
+        name: reviews
+        file: data/reviews.json
+        hint: "Leave empty until you have a real review. The site shows nothing when this list is empty."
+        fields:
+          - label: Reviews
+            name: reviews
+            widget: list
+            fields:
+              - { label: Product slug, name: product, widget: string, hint: "The filename of the product, without .md" }
+              - { label: Author, name: author, widget: string }
+              - { label: Rating, name: rating, widget: number, value_type: int, min: 1, max: 5 }
+              - { label: Text, name: text, widget: text }
+              - { label: Photo, name: photo, widget: image, required: false }
+              - { label: Source, name: source, widget: string, required: false, hint: "For example email or in person. Do not invent a review." }
+
+  - name: picks
+    label: Affiliate picks
+    files:
+      - label: Picks
+        name: picks
+        file: data/affiliate-picks.json
+        hint: "Hidden until the matching id in Settings is filled. Do not paste prices or star ratings."
+        fields:
+          - label: Picks
+            name: picks
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Affiliate URL, name: url, widget: string }
+              - label: Program
+                name: program
+                widget: select
+                options: [amazon, newegg, bestbuy, bh, other]
+              - { label: Blurb, name: blurb, widget: text, required: false }

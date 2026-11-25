@@ -1,0 +1,60 @@
+---
+import Mark from './Mark.astro';
+import CatIcon from './CatIcon.astro';
+import { activeBanners, visibleCategories } from '../lib/site';
+const { path = '/' } = Astro.props;
+const banner = activeBanners()[0];
+const current = (href: string) => (path === href || path.startsWith(`${href}/`) ? 'page' : undefined);
+const shopCurrent = path === '/shop' ? 'page' : undefined;
+const menu = visibleCategories();
+---
+{banner && (
+  <div class="banner">
+    <div class="wrap">
+      <p>{banner.text}</p>
+      {banner.href && <a href={banner.href}>{banner.link_label || 'See more'}</a>}
+    </div>
+  </div>
+)}
+<header class="site-header">
+  <div class="wrap topbar">
+    <a class="logo" href="/">
+      <Mark />
+      <span>
+        <strong>EARN IT</strong>
+        <span>Not Given</span>
+      </span>
+    </a>
+    <form class="search" action="/search" method="get" role="search">
+      <label class="sr-only" for="site-q">Search products</label>
+      <input id="site-q" name="q" type="search" placeholder="Search the shop" />
+      <button class="btn btn-gold" type="submit">Search</button>
+    </form>
+    <a class="cart-link" href="/cart">Cart <span class="cart-count" data-cart-count>0</span></a>
+    <button class="btn btn-ghost nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="site-nav">Menu</button>
+  </div>
+  <div class="wrap nav-panel" id="site-nav">
+    <nav class="nav-row" aria-label="Primary">
+      <a href="/shop" aria-current={shopCurrent}>Shop</a>
+      <a href="/deals" aria-current={current('/deals')}>Deals</a>
+      <a href="/designs" aria-current={current('/designs')}>Designs</a>
+      <a href="/guides" aria-current={current('/guides')}>Guides</a>
+      <a href="/tech-help" aria-current={current('/tech-help')}>Tech Help</a>
+      <a href="/about" aria-current={current('/about')}>About</a>
+      <div class="mega-bar">
+        {menu.map((category) => (
+          <div class={`mega tone-${category.tone}`}>
+            <a href={category.href} aria-current={path === category.href ? 'page' : undefined}>{category.label}</a>
+            {category.children.filter((child) => !child.hidden).length > 0 && (
+              <div class="mega-panel">
+                {category.children.filter((child) => !child.hidden).map((child) => (
+                  <a href={child.href}><CatIcon name={child.icon} /> {child.label}</a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </nav>
+  </div>
+</header>

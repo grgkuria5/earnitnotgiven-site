@@ -1,0 +1,31 @@
+---
+const { endpoint = '' } = Astro.props;
+---
+<button class="chat-launcher" type="button" data-chat-open aria-expanded="false" aria-controls="chat-panel">
+  <span class="sr-only">Open chat</span>
+  <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="#161008" d="M4 5h16v10H7l-3 3z"></path>
+  </svg>
+</button>
+<section id="chat-panel" class="chat-panel" hidden data-endpoint={endpoint} role="dialog" aria-labelledby="chat-title">
+  <header>
+    <h2 id="chat-title">Ask the shop</h2>
+    <p class="muted">Answers stay on this page unless a private https helper is configured. We never ask for payment details.</p>
+  </header>
+  <div class="quick">
+    <button type="button" data-chat-suggest="How does shipping work?">Shipping</button>
+    <button type="button" data-chat-suggest="What is the return policy?">Returns</button>
+    <button type="button" data-chat-suggest="How do I book Tech Help?">Tech Help</button>
+    <button type="button" data-chat-suggest="How do I contact the shop?">Contact</button>
+  </div>
+  <div class="chat-log" data-chat-log aria-live="polite"></div>
+  <form class="chat-form" data-chat-form>
+    <p class="trap-field">
+      <label for="chat-company">Company</label>
+      <input id="chat-company" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+    </p>
+    <label class="sr-only" for="chat-text">Message</label>
+    <input id="chat-text" name="message" type="text" maxlength="500" autocomplete="off" placeholder="Ask a question" />
+    <button class="btn btn-gold" type="submit" data-chat-send disabled>Send</button>
+  </form>
+</section>

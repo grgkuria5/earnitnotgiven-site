@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { publishedGuides } from '../../lib/site';
+const guides = await publishedGuides();
+---
+<BaseLayout title="Guides" description="Buying guides from Earn It Not Given LLC." path="/guides">
+  <div class="wrap section">
+    <p class="eyebrow">From the bench</p>
+    <h1>Guides</h1>
+    <p class="muted">Notes on buying used gear, what we check, and accessories worth having. Published guides appear here.</p>
+    {guides.length ? (
+      <div class="grid">
+        {guides.map((guide) => (
+          <article class="panel">
+            <p class="muted">{guide.data.date}</p>
+            <h2><a href={`/guides/${guide.id}`}>{guide.data.title}</a></h2>
+            <p>{guide.data.description}</p>
+          </article>
+        ))}
+      </div>
+    ) : <p class="empty">No guides are published yet. Check back soon.</p>}
+  </div>
+</BaseLayout>

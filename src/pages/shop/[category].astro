@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Catalog from '../../components/Catalog.astro';
+import CatIcon from '../../components/CatIcon.astro';
+import { allProducts, allCategoryNodes, categoryById, productInCategory } from '../../lib/site';
+
+export function getStaticPaths() {
+  return allCategoryNodes()
+    .filter((category) => category.kind !== 'link')
+    .map((category) => ({ params: { category: category.id } }));
+}
+
+const { category: categoryId } = Astro.params;
+const category = categoryById(categoryId || '');
+if (!category || category.kind === 'link') return Astro.redirect('/shop');
+const products = (await allProducts()).filter((product) => productInCategory(product, category));
+const brands = [...new Set(products.map((product) => product.data.brand).filter(Boolean))].sort();
+const specs = [...new Set(products.flatMap((product) => product.data.specs.map((spec) => `${spec.name}=${spec.value}`)))].sort();
+---
+<BaseLayout title={category.label} description={category.blurb} path={`/shop/${category.id}`} tone={category.tone}>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <a href="/shop">Shop</a> <span>{category.label}</span></nav>
+    <p class="eyebrow"><CatIcon name={category.icon} /> {category.tone === 'tech' ? 'Tech' : 'Style'}</p>
+    <h1>{category.label}</h1>
+    <p class="muted">{category.blurb}</p>
+    {category.children.filter((child) => !child.hidden).length > 0 && (
+      <div class="cats">
+        {category.children.filter((child) => !child.hidden).map((child) => (
+          <a href={child.href}>{child.label}</a>
+        ))}
+      </div>
+    )}
+    {products.length ? <Catalog products={products} brands={brands} specs={specs} /> : <p class="empty">Nothing is listed in {category.label} yet. Sample placeholders show up in the categories they belong to.</p>}
+  </div>
+</BaseLayout>

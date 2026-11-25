@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AMAZON_DISCLOSURE, affiliatePicks, amazonEnabled } from '../lib/site';
+import { withAmazonTag } from '../lib/pure';
+import { settings } from '../lib/site';
+const picks = affiliatePicks().filter((pick) => pick.program === 'amazon');
+---
+<BaseLayout title="Amazon Picks" description="Affiliate picks from Earn It Not Given. No prices are copied from Amazon." path="/amazon-picks">
+  <div class="wrap section">
+    <h1>Amazon Picks</h1>
+    {amazonEnabled() && picks.length ? (
+      <>
+        <p class="disclosure">{AMAZON_DISCLOSURE}</p>
+        <div class="grid cards">
+          {picks.map((pick) => (
+            <article class="card">
+              <h2>{pick.title}</h2>
+              <p>{pick.blurb}</p>
+              <p><a class="btn btn-ghost" href={withAmazonTag(pick.url, settings.amazon_associates_tag)} rel="sponsored nofollow noopener noreferrer" target="_blank">View on Amazon</a></p>
+            </article>
+          ))}
+        </div>
+      </>
+    ) : (
+      <p class="empty">Amazon Picks stay hidden until an Associates tag is saved in settings and at least one pick is added. No prices or ratings are shown here.</p>
+    )}
+  </div>
+</BaseLayout>

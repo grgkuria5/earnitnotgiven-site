@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateNote from '../components/TemplateNote.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Terms" description="Terms template for Earn It Not Given LLC. Not legal advice." path="/terms">
+  <div class="wrap prose section">
+    <TemplateNote />
+    <h1>Terms</h1>
+    <p>These terms cover use of this website and purchases from {settings.business_name} made with the PayPal or Stripe buttons here. They are the shop's own rules, not a law firm's advice.</p>
+    <h2>Who you are buying from</h2>
+    <p>Items checked out on this site are sold by {settings.business_name}, {settings.location_label}. Etsy design orders are purchases on Etsy. Amazon, Newegg, Best Buy, B&amp;H, and other outbound links are purchases on those sites. An “Also on Amazon” button is a listing George sells on Amazon, under Amazon's rules.</p>
+    <h2>Samples</h2>
+    <p>Listings marked Sample are not offers. They cannot be purchased.</p>
+    <h2>Prices and codes</h2>
+    <p>Prices are in US dollars. A promo code entered in the cart changes the PayPal total. A Stripe Payment Link charges the amount configured in Stripe and does not read the code. PayPal Standard totals are submitted from your browser; Stripe prices are fixed on Stripe.</p>
+    <h2>Digital files</h2>
+    <p>You receive a personal copy to use and display. The file is not a license to resell the artwork as your own product.</p>
+    <h2>Tech Help</h2>
+    <p>Service cards that say “Ask for quote” are not a price. A visit or remote session is agreed by email before work starts.</p>
+    <h2>Affiliate notice</h2>
+    <p>When an Amazon Associates tag is saved, the site says: As an Amazon Associate I earn from qualifying purchases. Other partner links may earn a commission.</p>
+    <h2>Liability</h2>
+    <p>Used and refurbished electronics are sold as described on the product page after a hand test. That test is not a lifetime warranty. GuardianOrbit, when it ships, is a family coordination app and not a promise of safety or a health service.</p>
+    <h2>Law</h2>
+    <p>These terms are governed by the laws of the State of California. Questions: {settings.sales_email}.</p>
+  </div>
+</BaseLayout>

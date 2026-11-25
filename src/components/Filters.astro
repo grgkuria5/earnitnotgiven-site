@@ -1,0 +1,56 @@
+---
+const { showQuery = false, brands = [], specs = [] } = Astro.props as { showQuery?: boolean; brands?: string[]; specs?: string[] };
+const conditions = ['New', 'Open Box', 'Refurbished', 'Used - Like New', 'Used - Good', 'Used - Fair', 'Digital'];
+---
+<form class="filters" data-filters>
+  {showQuery && (
+    <label>Search
+      <input type="search" data-filter-q placeholder="Words in the title" />
+    </label>
+  )}
+  {brands.length > 0 && (
+    <label>Brand
+      <select data-filter-brand>
+        <option value="">Any</option>
+        {brands.map((brand) => <option value={brand}>{brand}</option>)}
+      </select>
+    </label>
+  )}
+  {specs.length > 0 && (
+    <label>Spec
+      <select data-filter-spec>
+        <option value="">Any</option>
+        {specs.map((spec) => <option value={spec}>{spec.replace('=', ': ')}</option>)}
+      </select>
+    </label>
+  )}
+  <label>Condition
+    <select data-filter-condition>
+      <option value="">Any</option>
+      {conditions.map((condition) => <option value={condition}>{condition}</option>)}
+    </select>
+  </label>
+  <label>Min price
+    <input type="number" min="0" step="1" data-filter-min />
+  </label>
+  <label>Max price
+    <input type="number" min="0" step="1" data-filter-max />
+  </label>
+  <label>Type
+    <select data-filter-type>
+      <option value="">All</option>
+      <option value="bundle">Bundles</option>
+      <option value="digital">Digital</option>
+    </select>
+  </label>
+  <label>Sort
+    <select data-filter-sort>
+      <option value="featured">Featured</option>
+      <option value="price-asc">Price, low to high</option>
+      <option value="price-desc">Price, high to low</option>
+      <option value="name">Name</option>
+    </select>
+  </label>
+  <p data-count class="muted"></p>
+  <button class="sr-only" type="submit">Apply filters</button>
+</form>

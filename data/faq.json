@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "id": "shipping",
+      "question": "How does shipping work?",
+      "keywords": ["ship", "shipping", "delivery", "deliver", "arrive", "tracking", "postage"],
+      "answer": "Physical items ship from the Palo Alto area. The product page explains handling, and the carrier cost is confirmed with you or added on PayPal before you pay. EarnItNotGiven designs bought on Etsy ship under that Etsy listing, not through this cart. Digital downloads are delivered by the Stripe link when it includes the file, by the Etsy listing, or by email."
+    },
+    {
+      "id": "returns",
+      "question": "What is the return policy?",
+      "keywords": ["return", "refund", "exchange", "warranty"],
+      "answer": "You can ask for a return within 14 days if an item is not as described or fails the same checks we use before listing. Changed-your-mind returns on working items are accepted when the item is unused, and you cover return shipping. Digital files are replaced if the file itself is broken. Etsy orders follow the Etsy listing. Full detail is on the Shipping & Returns page."
+    },
+    {
+      "id": "payment",
+      "question": "How do I pay?",
+      "keywords": ["pay", "payment", "paypal", "stripe", "card", "checkout", "visa"],
+      "answer": "PayPal checkout uses the cart on this site once a PayPal Business email is saved in the shop settings. Card checkout uses a Stripe Payment Link on the product, when George has added one. This site never sees your card number. Promo codes apply on the PayPal cart. A Stripe link charges the price set inside Stripe."
+    },
+    {
+      "id": "tech",
+      "question": "How do I book Tech Help?",
+      "keywords": ["tech", "help", "repair", "wifi", "wi-fi", "virus", "appointment", "book", "laptop", "windows"],
+      "answer": "Open Tech Help, pick the service, and send a booking request. Until a form service is connected, the request opens an email to sales@earnitnotgiven.com. Prices stay “Ask for quote” until George sets them. Visits are in the Palo Alto area."
+    },
+    {
+      "id": "contact",
+      "question": "How do I contact the shop?",
+      "keywords": ["contact", "email", "george", "sales", "phone", "talk", "human"],
+      "answer": "Email george@earnitnotgiven.com or sales@earnitnotgiven.com. A person reads them. The shop is Earn It Not Given LLC in Palo Alto, California."
+    },
+    {
+      "id": "sample",
+      "question": "What does Sample mean?",
+      "keywords": ["sample", "placeholder", "not for sale"],
+      "answer": "A Sample badge means the listing is a placeholder so the page layout is ready. It is not for sale. Checkout stays off for sample items."
+    },
+    {
+      "id": "etsy",
+      "question": "Where do the designs check out?",
+      "keywords": ["etsy", "design", "shirt", "tee", "poster", "legging"],
+      "answer": "EarnItNotGiven designs check out on Etsy. The button on each design card opens that Etsy listing. They are not added to the PayPal cart on this site."
+    },
+    {
+      "id": "promo",
+      "question": "How does the welcome code work?",
+      "keywords": ["promo", "code", "discount", "welcome10", "coupon", "10"],
+      "answer": "Enter the displayed code in the cart. PayPal is charged the discounted total. Stripe Payment Links do not pick up the code, because their price is fixed on Stripe."
+    }
+  ]
+}

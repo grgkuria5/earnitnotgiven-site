@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { etsyProducts } from '../lib/site';
+import { money } from '../lib/pure';
+const designs = etsyProducts();
+---
+<BaseLayout title="EarnItNotGiven Designs" description="Tees, leggings, bomber jackets, posters, and wall art from EarnItNotGiven. Checkout is on Etsy." path="/designs" tone="fashion">
+  <div class="wrap section">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span>Designs</span></nav>
+    <p class="eyebrow">Print on demand</p>
+    <h1>EarnItNotGiven Designs</h1>
+    <p class="muted">These are George's designs. The button opens the Etsy listing. There is no checkout for them on this site.</p>
+    {designs.length ? (
+      <div class="grid cards">
+        {designs.map((design) => (
+          <article class="card">
+            {design.image ? <img src={design.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+            <h3>{design.title}</h3>
+            {design.price !== null && <p class="price">From {money(design.price)}</p>}
+            {design.ai && <p class="ai-note">Made with AI assistance</p>}
+            <p class="meta"><a class="btn btn-gold" href={design.url} rel="noopener noreferrer" target="_blank">View on Etsy</a></p>
+          </article>
+        ))}
+      </div>
+    ) : <p class="empty">No Etsy listings are in the catalog yet. Add them in the content manager or in data/etsy-products.json.</p>}
+  </div>
+</BaseLayout>

@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Catalog from '../../components/Catalog.astro';
+import { allProducts } from '../../lib/site';
+const products = await allProducts();
+---
+<BaseLayout title="Shop" description="Electronics, computers, phones, clothing, digital downloads, and bundles from Earn It Not Given LLC." path="/shop">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span>Shop</span></nav>
+    <h1>Shop</h1>
+    <p class="muted">Filter by condition, price, and type. Items marked Sample are placeholders.</p>
+    {products.length ? <Catalog products={products} /> : <p class="empty">The shop is empty.</p>}
+  </div>
+</BaseLayout>

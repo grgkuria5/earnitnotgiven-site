@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { servicesData, settings } from '../lib/site';
+const data = servicesData();
+---
+<BaseLayout title="Tech Help" description="Local Palo Alto-area PC, Wi-Fi, backup, virus cleanup, Windows, phone, and smart home help from Earn It Not Given LLC." path="/tech-help" tone="tech">
+  <div class="wrap section">
+    <p class="eyebrow">Palo Alto area</p>
+    <h1>Tech Help</h1>
+    <p class="lede">{data.experience_note} {data.area_note}</p>
+    <div class="grid services">
+      {data.services.map((service) => (
+        <article class="service">
+          <h2>{service.title}</h2>
+          <p>{service.summary}</p>
+          <p class="price-label">{service.price_label}</p>
+        </article>
+      ))}
+    </div>
+    <form class="panel stack" data-guarded-form="booking" data-endpoint={settings.form_endpoint} data-mail={settings.sales_email} data-subject="Tech Help booking">
+      <h2>Request a time</h2>
+      <p>Tell George what the machine is doing. Leave prices as a conversation. Do not put card numbers or passwords in this form.</p>
+      <p class="trap-field">
+        <label for="b-co">Company website</label>
+        <input id="b-co" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+      </p>
+      <input type="hidden" name="form_opened_at" value="" data-opened-at />
+      <label class="field">Name <input name="name" type="text" required autocomplete="name" /></label>
+      <label class="field">Email <input type="email" name="email" required autocomplete="email" /></label>
+      <label class="field">Phone <input name="phone" type="tel" autocomplete="tel" /></label>
+      <label class="field">Service
+        <select name="service">
+          {data.services.map((service) => <option>{service.title}</option>)}
+          <option>Not sure yet</option>
+        </select>
+      </label>
+      <label class="field">A time that works <input name="time" type="text" placeholder="Weekday afternoon, or a date" /></label>
+      <label class="field">What is going on <textarea name="message" required></textarea></label>
+      <button class="btn btn-gold" type="submit" disabled data-arm>Send booking request</button>
+      <p class="form-note" data-form-note>The button waits a few seconds so drive-by bots miss it. You can also email {settings.sales_email} directly.</p>
+    </form>
+  </div>
+</BaseLayout>

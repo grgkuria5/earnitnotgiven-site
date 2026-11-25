@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { allProducts, categoryById, priceOf, productHref, reviewsFor, schemaCondition, settings, SITE, toneForCategory } from '../../lib/site';
+import { amazonLink, etsyLink, flashPercent, money, parsePacific, paypalReady, renderRichText, safeUrl, stripeLink } from '../../lib/pure';
+
+export async function getStaticPaths() {
+  const products = await allProducts();
+  return products.map((product) => ({ params: { slug: product.id }, props: { product } }));
+}
+
+const { product } = Astro.props;
+const products = await allProducts();
+const price = priceOf(product);
+const onSale = typeof product.data.sale_price === 'number' && product.data.sale_price < product.data.price;
+const images = product.data.images.map((image) => safeUrl(image)).filter(Boolean);
+const stripe = product.data.sample ? '' : stripeLink(product.data.stripe_payment_link);
+const flashStripe = product.data.sample ? '' : stripeLink(product.data.flash_stripe_link);
+const flashStartMs = parsePacific(product.data.flash_start);
+const flashEndMs = parsePacific(product.data.flash_end);
+const hasFlash = typeof product.data.flash_price === 'number' && flashStartMs !== null && flashEndMs !== null && product.data.flash_price < product.data.price;
+const flashOff = hasFlash ? flashPercent(product.data.price, product.data.flash_price!) : 0;
+const amazon = amazonLink(product.data.amazon_url);
+const etsyDelivery = etsyLink(product.data.etsy_delivery_url);
+const canPaypal = !product.data.sample && product.data.paypal_enabled && paypalReady(settings.paypal_business_email) && product.data.quantity > 0;
+const related = products.filter((item) => item.id !== product.id && item.data.category === product.data.category).slice(0, 3);
+const reviews = reviewsFor(product.id);
+const placed = categoryById(product.data.subcategory || product.data.category);
+const warrantyLink = product.data.sample ? '' : stripeLink(product.data.warranty_stripe_link);
+const pickupLink = product.data.sample ? '' : stripeLink(product.data.pickup_stripe_link);
+const body = renderRichText(product.body || product.data.summary, { products: [], amazonTag: settings.amazon_associates_tag });
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.data.title,
+  image: images.map((image) => new URL(image, SITE).toString()),
+  description: product.data.summary || product.data.title,
+  sku: product.data.sku || product.id,
+  brand: { '@type': 'Brand', name: product.data.brand || settings.business_name },
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'USD',
+    price: price.toFixed(2),
+    availability: product.data.quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    itemCondition: schemaCondition(product.data.condition),
+    url: new URL(productHref(product), SITE).toString(),
+    seller: { '@type': 'Organization', name: settings.business_name },
+  },
+};
+---
+<BaseLayout
+  title={product.data.title}
+  description={product.data.summary || product.data.title}
+  path={productHref(product)}
+  image={images[0] || '/images/og.png'}
+  jsonLd={jsonLd}
+  tone={toneForCategory(product.data.category)}
+>
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <a href="/shop">Shop</a>
+      <a href={placed?.href || '/shop'}>{placed?.label || product.data.category}</a>
+      <span>{product.data.title}</span>
+    </nav>
+    <article class="product">
+      <div class="gallery">
+        {images[0] ? (
+          <img data-gallery-main src={images[0]} alt={product.data.title} width="900" height="680" />
+        ) : (
+          <div class="ph"></div>
+        )}
+        {images.length > 1 && (
+          <div class="thumbs">
+            {images.map((image) => (
+              <button type="button" data-gallery-thumb data-src={image} data-alt={product.data.title}>
+                <img src={image} alt="" width="72" height="54" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <div
+        class="buybox"
+        data-flash-mode={hasFlash ? 'offer' : undefined}
+        data-flash-start={hasFlash ? flashStartMs : undefined}
+        data-flash-end={hasFlash ? flashEndMs : undefined}
+        data-flash-price={hasFlash ? product.data.flash_price : undefined}
+        data-flash-stripe={hasFlash ? flashStripe : undefined}
+      >
+        {product.data.sample && <p class="flag inline">Sample</p>}
+        <h1>{product.data.title}</h1>
+        <p class="muted">{product.data.condition}{product.data.brand ? ` · ${product.data.brand}` : ''}</p>
+        {hasFlash && (
+          <div class="flash-offer" hidden>
+            <p class="price">
+              <span class="was">{money(product.data.price)}</span>
+              <span>{money(product.data.flash_price!)}</span>
+            </p>
+            {flashOff > 0 && <p class="save inline">{flashOff}% off</p>}
+            <p class="countdown" data-countdown></p>
+            {typeof product.data.flash_qty_limit === 'number' && <p class="left-label">{product.data.flash_qty_limit} left</p>}
+            <p class="muted">Flash price is Pacific Time and turns off when the timer ends. PayPal uses this price. A flash Stripe link, when set, replaces the regular card link.</p>
+          </div>
+        )}
+        <p class="price regular-price">
+          {onSale && <span class="was">{money(product.data.price)}</span>}
+          <span>{money(price)}</span>
+        </p>
+        {product.data.product_type === 'bundle' && product.data.bundle_savings ? (
+          <p class="save inline">Save {money(product.data.bundle_savings)}</p>
+        ) : null}
+        {product.data.ai_assisted && <p class="ai-note">Made with AI assistance</p>}
+        {product.data.sample && <p class="notice">This is a sample listing so the page has a shape. It is not for sale, and checkout stays off.</p>}
+        {product.data.warranty_days > 0 && (
+          <div class="notice">
+            <strong>{product.data.warranty_days}-day shop warranty</strong>
+            <p>Covers the same function checks used before listing. <a href="/warranty">Warranty terms</a> (template).</p>
+            {typeof product.data.warranty_addon_price === 'number' && (
+              <p>Optional add-on {money(product.data.warranty_addon_price)}. {warrantyLink ? <a href={warrantyLink} rel="noopener noreferrer" target="_blank">Pay for the add-on</a> : 'Payment link is not set yet.'}</p>
+            )}
+          </div>
+        )}
+        {product.data.local_pickup && (
+          <p class="notice">Local pickup in Palo Alto (by appointment). {pickupLink ? <a href={pickupLink} rel="noopener noreferrer" target="_blank">Pickup payment link</a> : 'The pickup payment link is separate from shipping and is not set on this sample.'} <a href="/pickup">Pickup details</a></p>
+        )}
+        <p>{product.data.quantity > 0 ? `${product.data.quantity} available` : 'Out of stock'}</p>
+        {product.data.product_type === 'bundle' && (
+          <div>
+            <h2>Included</h2>
+            <ul>{product.data.bundle_items.map((item) => <li>{item}</li>)}</ul>
+          </div>
+        )}
+        {product.data.digital && (
+          <p class="notice">
+            Digital delivery: {etsyDelivery ? 'the Etsy listing linked below, or ' : ''}
+            {stripe ? 'the Stripe Payment Link if George attached the file there, or ' : ''}
+            email from the shop after payment. A digital file is replaced if the file itself is broken.
+          </p>
+        )}
+        {etsyDelivery && <p><a href={etsyDelivery} rel="noopener noreferrer" target="_blank">Delivery listing on Etsy</a></p>}
+        {!product.data.sample && product.data.quantity > 0 && (
+          <div class="stack">
+            <label>Quantity <input data-qty type="number" min="1" max={product.data.quantity} value="1" /></label>
+            <button
+              class="btn btn-gold"
+              type="button"
+              data-add-cart
+              data-slug={product.id}
+              data-title={product.data.title}
+              data-price={price.toFixed(2)}
+              data-regular-price={price.toFixed(2)}
+              data-max={product.data.quantity}
+              data-image={images[0] || ''}
+              data-sample="false"
+              data-digital={product.data.digital ? 'true' : 'false'}
+              data-sku={product.data.sku || product.id}
+            >Add to cart</button>
+            <p data-added class="muted"></p>
+          </div>
+        )}
+        {product.data.sample && <p class="muted">Add to cart is off because this sample is not for sale.</p>}
+        {stripe && <p><a class="btn btn-ghost" data-stripe data-regular-href={stripe} href={stripe} rel="noopener noreferrer" target="_blank">Pay with card (Stripe)</a></p>}
+        {!stripe && !product.data.sample && <p class="muted">Card checkout appears here when a Stripe Payment Link is saved on the product.</p>}
+        {canPaypal && (
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_xclick" />
+            <input type="hidden" name="business" value={settings.paypal_business_email} />
+            <input type="hidden" name="item_name" value={product.data.title} />
+            <input type="hidden" name="item_number" value={product.data.sku || product.id} />
+            <input type="hidden" name="amount" value={price.toFixed(2)} data-regular-amount={price.toFixed(2)} />
+            <input type="hidden" name="currency_code" value="USD" />
+            <input type="hidden" name="no_shipping" value={product.data.digital ? '1' : '0'} />
+            <input type="hidden" name="charset" value="utf-8" />
+            <input type="hidden" name="return" value={`${SITE}/cart`} />
+            <input type="hidden" name="cancel_return" value={`${SITE}${productHref(product)}`} />
+            <label>PayPal quantity <input type="number" name="quantity" min="1" max={product.data.quantity} value="1" /></label>
+            <button class="btn btn-ghost" type="submit">Buy this item with PayPal</button>
+            <p class="muted">Promo codes are applied in the cart, not on this single-item button.</p>
+          </form>
+        )}
+        {amazon && (
+          <p>
+            <a class="btn btn-ghost" href={amazon} rel="noopener noreferrer" target="_blank">Also on Amazon</a>
+            {product.data.sample && <span class="muted"> Sample link for the layout. Replace it with your listing.</span>}
+          </p>
+        )}
+        {product.data.specs.length > 0 && (
+          <table class="specs">
+            <caption class="sr-only">Specifications</caption>
+            <tbody>
+              {product.data.specs.map((spec) => (
+                <tr><th scope="row">{spec.name}</th><td>{spec.value}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <div class="notice">
+          <strong>Shipping &amp; returns</strong>
+          <p>{product.data.shipping_note || 'Physical orders ship from the Palo Alto area. Cost is confirmed before PayPal is completed when it is not already in the price.'}</p>
+          <p><a href="/shipping">Read shipping and returns</a></p>
+        </div>
+      </div>
+    </article>
+    <div class="prose section" set:html={body} />
+    {reviews.length > 0 && (
+      <section class="section" aria-label="Reviews">
+        <h2>Reviews</h2>
+        {reviews.map((review) => (
+          <article class="panel">
+            <p><strong>{review.author}</strong> · {review.rating} of 5{review.source ? ` · ${review.source}` : ''}</p>
+            <p>{review.text}</p>
+            {review.photo && <img src={review.photo} alt="" width="320" height="240" />}
+          </article>
+        ))}
+      </section>
+    )}
+    {related.length > 0 && (
+      <section class="section">
+        <h2>More in this category</h2>
+        <div class="grid cards">{related.map((item) => <ProductCard product={item} />)}</div>
+      </section>
+    )}
+  </div>
+</BaseLayout>

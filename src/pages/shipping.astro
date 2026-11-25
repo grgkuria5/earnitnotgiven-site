@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateNote from '../components/TemplateNote.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Shipping" description="How Earn It Not Given LLC ships. This page is a template for George to review." path="/shipping">
+  <div class="wrap prose section">
+    <TemplateNote />
+    <h1>Shipping</h1>
+    <p>This is the shop policy for orders placed with Earn It Not Given LLC through the buttons on this site. It is written in plain language, not as a lawyer's opinion.</p>
+    <h2>Physical items</h2>
+    <p>Orders ship from the {settings.location_label} area. Handling is usually a few business days after payment clears. If a shipping cost is not already in the price, George confirms it with you or adds it on PayPal before the payment is final. You get tracking when the carrier provides it.</p>
+    <h2>Returns</h2>
+    <p>The return window is {settings.return_window_days} days. The details are on the <a href="/returns">returns page</a>. Write {settings.sales_email}.</p>
+    <h2>Digital downloads</h2>
+    <p>Wall art and coloring pages are delivered by the Stripe Payment Link when that link is set up to send the file, by the Etsy listing linked on the product, or by email after you pay. If the file will not open, email the shop and you will get a working copy. Delivered digital files are otherwise not refundable.</p>
+    <h2>Etsy designs</h2>
+    <p>EarnItNotGiven tees, leggings, jackets, posters, and prints check out on Etsy. Shipping, production, and returns for those orders follow that Etsy listing, not this cart.</p>
+    <h2>Amazon and other stores</h2>
+    <p>An “Also on Amazon” button is George's own listing on Amazon. Affiliate buttons, when the shop has turned them on, go to Amazon, Newegg, Best Buy, B&amp;H, or another partner. Those purchases are with that store.</p>
+    <h2>Sample listings</h2>
+    <p>Anything marked Sample is not for sale and cannot be checked out.</p>
+  </div>
+</BaseLayout>

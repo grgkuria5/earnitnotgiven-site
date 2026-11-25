@@ -1,0 +1,23 @@
+---
+import Filters from './Filters.astro';
+import ProductCard from './ProductCard.astro';
+import type { ProductEntry } from '../lib/site';
+const { products, showQuery = false, brands = [], specs = [] } = Astro.props as {
+  products: ProductEntry[];
+  showQuery?: boolean;
+  brands?: string[];
+  specs?: string[];
+};
+---
+<div data-browse>
+  <div class="layout">
+    <Filters showQuery={showQuery} brands={brands} specs={specs} />
+    <div>
+      <noscript><p class="form-note">Filters and sorting use JavaScript. Every listing in this set is shown below.</p></noscript>
+      <div class="grid cards" data-grid>
+        {products.map((product) => <ProductCard product={product} />)}
+      </div>
+      <p class="empty" data-empty hidden>Nothing matches those filters.</p>
+    </div>
+  </div>
+</div>

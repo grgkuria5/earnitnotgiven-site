@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import TrustStrip from '../components/TrustStrip.astro';
+import Orbit from '../components/Orbit.astro';
+import { allProducts, etsyProducts, priceOf, settings, SITE, visibleCategories } from '../lib/site';
+import { money } from '../lib/pure';
+
+const products = await allProducts();
+const deals = products.filter((product) => product.data.featured || priceOf(product) < product.data.price).slice(0, 8);
+const flash = products.filter((product) => typeof product.data.flash_price === 'number' && product.data.flash_start && product.data.flash_end);
+const designs = etsyProducts().slice(0, 8);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Store',
+  name: settings.business_name,
+  url: SITE,
+  email: settings.sales_email,
+  address: { '@type': 'PostalAddress', addressLocality: 'Palo Alto', addressRegion: 'CA', addressCountry: 'US' },
+  description: settings.tagline,
+};
+---
+<BaseLayout title="Hand-tested tech in Palo Alto" description={settings.tagline} path="/" jsonLd={jsonLd}>
+  <section class="wrap hero">
+    <div>
+      <p class="eyebrow">Earn It Not Given LLC · {settings.location_label}</p>
+      <h1>Tested gear. Earned style.</h1>
+      <p class="lede">{settings.tagline} Every electronic and computer is checked by hand before it is listed. Designs from the EarnItNotGiven print shop check out on Etsy.</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="/shop">Shop the bench</a>
+        <a class="btn btn-ghost" href="/designs">EarnItNotGiven designs</a>
+      </div>
+      <ul class="trust">
+        <li>Hand-tested</li>
+        <li>Palo Alto</li>
+        <li>A real person on email</li>
+      </ul>
+    </div>
+    <aside class="panel">
+      <p class="eyebrow">On the counter</p>
+      <h2>Sample listings are marked</h2>
+      <p>The electronics, computers, phones, and clothing with a Sample flag are placeholders. They are not for sale. Real stock replaces them as George posts it.</p>
+      <a href="/about">About the shop</a>
+    </aside>
+  </section>
+  <TrustStrip />
+  {flash.length > 0 && (
+    <section class="wrap section" data-flash-strip>
+      <p class="eyebrow">Pacific Time</p>
+      <h2>Flash deals</h2>
+      <div class="strip">
+        {flash.map((product) => <ProductCard product={product} flash />)}
+      </div>
+      <p><a href="/deals">All flash deals</a></p>
+    </section>
+  )}
+
+  <section class="wrap section">
+    <h2>Shop by category</h2>
+    <div class="grid cats-grid">
+      {visibleCategories().map((category) => (
+        <a class={`cat tone-${category.tone}`} href={category.href}>
+          <p class="eyebrow">{category.tone === 'tech' ? 'Tech' : 'Style'}</p>
+          <h3>{category.label}</h3>
+          <p class="muted">{category.blurb}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap section tone-tech">
+    <h2>On the bench</h2>
+    <p class="muted">Featured pieces and anything with a sale price.</p>
+    {deals.length ? (
+      <div class="strip">
+        {deals.map((product) => <ProductCard product={product} />)}
+      </div>
+    ) : <p class="empty">No deals yet.</p>}
+  </section>
+
+  <section class="wrap section tone-fashion" id="designs">
+    <h2>EarnItNotGiven Designs</h2>
+    <p class="muted">Tees, leggings, bomber jackets, posters, and wall art. Each card opens the Etsy listing. Checkout for these stays on Etsy.</p>
+    {designs.length ? (
+      <div class="grid cards">
+        {designs.map((design) => (
+          <article class="card">
+            {design.image ? <img src={design.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+            <h3>{design.title}</h3>
+            {design.price !== null && <p class="price">From {money(design.price)}</p>}
+            {design.ai && <p class="ai-note">Made with AI assistance</p>}
+            <p class="meta"><a class="btn btn-gold" href={design.url} rel="noopener noreferrer" target="_blank">View on Etsy</a></p>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p class="empty">Design listings will show here when they are in the catalog. Until then, the print shop still lives on Etsy under EarnItNotGiven.</p>
+    )}
+    <p><a href="/designs">All designs</a></p>
+  </section>
+
+  <section class="wrap section">
+    <a class="orbit-tile" href="/guardianorbit">
+      <Orbit />
+      <div>
+        <p class="eyebrow">Coming to iPhone and Apple Watch</p>
+        <h2>GuardianOrbit</h2>
+        <p>Arrival and departure alerts, timed check-ins, and SOS to trusted contacts. Built for families. Privacy-first. Not a health device.</p>
+        <span class="btn btn-ghost">See GuardianOrbit</span>
+      </div>
+    </a>
+  </section>
+
+  <section class="wrap section">
+    <div class="panel">
+      <p class="eyebrow">Local help</p>
+      <h2>Tech Help in the Palo Alto area</h2>
+      <p>PC setup, Wi-Fi, backups, virus cleanup, Windows reinstalls, phones, and smart home. Quotes start as “Ask for quote.”</p>
+      <a class="btn btn-gold" href="/tech-help">See services</a>
+    </div>
+  </section>
+
+  <div class="wrap section" id="newsletter">
+    <Newsletter />
+  </div>
+</BaseLayout>

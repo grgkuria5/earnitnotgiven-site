@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateNote from '../components/TemplateNote.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Returns and refunds" description="Return window for Earn It Not Given LLC. This page is a template for George to review." path="/returns">
+  <div class="wrap prose section">
+    <TemplateNote />
+    <h1>Returns &amp; refunds</h1>
+    <p>The current window is <strong>{settings.return_window_days} days</strong>. George changes that number in <code>data/settings.json</code> (<code>return_window_days</code>) or in the content manager. It is not legal advice.</p>
+    <h2>Physical items bought on this site</h2>
+    <p>Email {settings.sales_email} within {settings.return_window_days} days of delivery if an item is not as described or fails the same checks used before it was listed. Refunds go back to the original PayPal or Stripe payment after the item is back.</p>
+    <p>If you changed your mind on a working item, a return is accepted in that same window when the item is unused and complete. You pay return shipping in that case.</p>
+    <h2>What is not covered here</h2>
+    <p>Digital files are replaced if the file will not open. Etsy design orders follow the Etsy listing. Amazon and other store purchases follow that store. Sample listings were never for sale.</p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { settings } from '../lib/site';
+import { jsonForScript, paypalReady } from '../lib/pure';
+const promos = jsonForScript(settings.promo_codes.filter((promo) => promo.active));
+---
+<BaseLayout title="Cart" description="Review your cart and check out with PayPal." path="/cart">
+  <div class="wrap section">
+    <h1>Cart</h1>
+    <noscript><p class="notice">The multi-item cart uses JavaScript on this device. A single real item can still be bought from its product page with PayPal once the shop email is set.</p></noscript>
+    <div
+      id="cart-root"
+      data-paypal-email={settings.paypal_business_email}
+      data-paypal-ready={paypalReady(settings.paypal_business_email) ? 'true' : 'false'}
+      data-promos={promos}
+      data-welcome-code={settings.welcome_promo_code}
+    >
+      <p>Loading the cart saved in this browser…</p>
+    </div>
+  </div>
+</BaseLayout>

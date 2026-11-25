@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { allProducts, AMAZON_DISCLOSURE, guideProducts, publishedGuides, settings } from '../../lib/site';
+import { renderRichText } from '../../lib/pure';
+
+export async function getStaticPaths() {
+  const guides = await publishedGuides();
+  const products = await allProducts();
+  return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide, products } }));
+}
+
+const { guide, products } = Astro.props;
+const html = renderRichText(guide.body || '', {
+  products: guideProducts(products),
+  amazonTag: settings.amazon_associates_tag,
+});
+---
+<BaseLayout title={guide.data.title} description={guide.data.description} path={`/guides/${guide.id}`}>
+  <article class="wrap prose section">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/guides">Guides</a> <span>{guide.data.title}</span></nav>
+    <p class="muted">{guide.data.date}</p>
+    <h1>{guide.data.title}</h1>
+    <p class="disclosure">{AMAZON_DISCLOSURE}</p>
+    <div set:html={html} />
+  </article>
+</BaseLayout>

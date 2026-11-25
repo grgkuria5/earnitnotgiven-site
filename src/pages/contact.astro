@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Contact" description="Email George at Earn It Not Given LLC in Palo Alto." path="/contact">
+  <div class="wrap section prose">
+    <h1>Contact</h1>
+    <p>The shop is in {settings.location_label}. Email is the reliable way to reach a person.</p>
+    <p><a href={`mailto:${settings.contact_email}`}>{settings.contact_email}</a></p>
+    <p><a href={`mailto:${settings.sales_email}`}>{settings.sales_email}</a></p>
+    <form class="stack" data-guarded-form="contact" data-endpoint={settings.form_endpoint} data-mail={settings.sales_email} data-subject="Website contact">
+      <p class="trap-field">
+        <label for="c-co">Company website</label>
+        <input id="c-co" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+      </p>
+      <input type="hidden" name="form_opened_at" value="" data-opened-at />
+      <label class="field">Name <input name="name" type="text" required autocomplete="name" /></label>
+      <label class="field">Email <input type="email" name="email" required autocomplete="email" /></label>
+      <label class="field">Message <textarea name="message" required placeholder="What do you need? Please do not include card numbers or passwords."></textarea></label>
+      <button class="btn btn-gold" type="submit" disabled data-arm>Send</button>
+      <p class="form-note" data-form-note>The button wakes up after a few seconds. If no form service is connected, this opens your email app.</p>
+    </form>
+  </div>
+</BaseLayout>

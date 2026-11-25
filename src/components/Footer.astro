@@ -1,0 +1,39 @@
+---
+import Newsletter from './Newsletter.astro';
+import { AMAZON_DISCLOSURE, amazonEnabled, visibleCategories, otherAffiliatesEnabled, settings } from '../lib/site';
+---
+<footer class="site-footer">
+  <div class="wrap foot-grid">
+    <div>
+      <strong>{settings.business_name}</strong>
+      <p class="muted">{settings.location_label}. Hand-tested electronics. Real email, from George.</p>
+      <p><a href={`mailto:${settings.contact_email}`}>{settings.contact_email}</a></p>
+      <p><a href={`mailto:${settings.sales_email}`}>{settings.sales_email}</a></p>
+    </div>
+    <div class="foot-links">
+      <strong>Shop</strong>
+      {visibleCategories().map((category) => <a href={category.href}>{category.label}</a>)}
+    </div>
+    <div class="foot-links">
+      <strong>Visit</strong>
+      <a href="/guides">Guides</a>
+      <a href="/tech-help">Tech Help</a>
+      <a href="/guardianorbit">GuardianOrbit</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/trade-in">Sell or trade in</a>
+      <a href="/shipping">Shipping</a>
+      <a href="/returns">Returns</a>
+      <a href="/warranty">Warranty</a>
+      <a href="/pickup">Local pickup</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </div>
+    <Newsletter compact />
+  </div>
+  <div class="wrap">
+    {amazonEnabled() && <p class="disclosure">{AMAZON_DISCLOSURE}</p>}
+    {otherAffiliatesEnabled() && <p class="disclosure">Some links to Newegg, Best Buy, B&amp;H, or other partners are affiliate links. Earn It Not Given LLC may earn a commission if you buy through them.</p>}
+    <p class="muted">© {new Date().getFullYear()} {settings.business_name}. Sample listings are not for sale.</p>
+  </div>
+</footer>

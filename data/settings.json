@@ -1,0 +1,34 @@
+{
+  "business_name": "Earn It Not Given LLC",
+  "tagline": "Hand-tested tech and earned style, from a small shop in Palo Alto.",
+  "paypal_business_email": "REPLACE_WITH_YOUR_PAYPAL_BUSINESS_EMAIL",
+  "amazon_associates_tag": "",
+  "newegg_affiliate_id": "",
+  "bestbuy_affiliate_id": "",
+  "bh_affiliate_id": "",
+  "other_affiliate_id": "",
+  "app_store_url": "",
+  "active_theme": "default",
+  "contact_email": "george@earnitnotgiven.com",
+  "sales_email": "sales@earnitnotgiven.com",
+  "location_label": "Palo Alto, CA",
+  "form_endpoint": "",
+  "newsletter_form_action": "",
+  "newsletter_email_field": "email",
+  "welcome_promo_code": "WELCOME10",
+  "welcome_promo_percent": 10,
+  "welcome_promo_message": "Get 10% off your first order",
+  "chat_ai_endpoint": "",
+  "return_window_days": 30,
+  "google_site_verification": "",
+  "analytics_provider": "",
+  "analytics_token": "",
+  "promo_codes": [
+    {
+      "code": "WELCOME10",
+      "label": "10% off your first order",
+      "percent": 10,
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateNote from '../components/TemplateNote.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Local pickup" description="Pick up an order in Palo Alto by appointment." path="/pickup">
+  <div class="wrap prose section">
+    <TemplateNote />
+    <h1>Local pickup in Palo Alto</h1>
+    <p>Some listings offer pickup by appointment instead of shipping. Email {settings.sales_email} with the item and a time that works. Pickup is in {settings.location_label}. There is no storefront hours posted here, so do not arrive without a reply.</p>
+    <p>The pickup payment link on a product, when it is set, is the one with no shipping charge. PayPal pickup checkout uses the same cart price and tells PayPal not to collect a ship-to address. A shipped order uses the regular link.</p>
+  </div>
+</BaseLayout>

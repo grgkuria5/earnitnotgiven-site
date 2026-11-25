@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="About" description="Earn It Not Given LLC is George's small shop in Palo Alto. Electronics and computers are hand-tested." path="/about">
+  <div class="wrap prose section">
+    <p class="eyebrow">{settings.location_label}</p>
+    <h1>About the shop</h1>
+    <p>Earn It Not Given LLC is a small business in Palo Alto, California, run by George. The name is the rule he works by: what leaves the bench should be earned, not waved through.</p>
+    <p>He sells electronics, computers, phones, and clothing, and he designs the EarnItNotGiven print line — tees, leggings, bomber jackets, posters, and wall art — which checks out on Etsy. Every electronic and every computer is hand-tested before it is listed. If a listing says refurbished or used, that is the honest condition, not a costume.</p>
+    <p>Support is personal. Write <a href={`mailto:${settings.contact_email}`}>{settings.contact_email}</a> or <a href={`mailto:${settings.sales_email}`}>{settings.sales_email}</a> and George reads it. There is no call center.</p>
+    <p>Tech Help is the same person, at a desk or on a visit around Palo Alto: setup, Wi-Fi, backups, cleanup, and a clean Windows install when that is the right fix.</p>
+    <p>GuardianOrbit, his upcoming iPhone and Apple Watch app, is a separate project for families. It is described on its own page, and it is not a medical product.</p>
+    <p>Listings marked Sample are layout placeholders. They are not offers to sell.</p>
+  </div>
+</BaseLayout>

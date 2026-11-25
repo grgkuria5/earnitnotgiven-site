@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Sell or trade in" description="Tell Earn It Not Given about a device you want to sell or trade. A person replies by email." path="/trade-in">
+  <div class="wrap section prose">
+    <h1>Sell or trade in</h1>
+    <p>Send the details and George will answer from {settings.sales_email}. This form does not create a price by itself. Do not include passwords or payment numbers.</p>
+    <form class="stack" data-guarded-form="tradein" data-endpoint={settings.form_endpoint} data-mail={settings.sales_email} data-subject="Sell or trade in">
+      <p class="trap-field">
+        <label for="t-co">Company website</label>
+        <input id="t-co" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+      </p>
+      <input type="hidden" name="form_opened_at" value="" data-opened-at />
+      <label class="field">Device type <input name="device_type" type="text" required placeholder="Laptop, phone, desktop" /></label>
+      <label class="field">Brand and model <input name="model" type="text" required /></label>
+      <label class="field">Condition <input name="condition" type="text" required placeholder="Powers on, cracked screen, and so on" /></label>
+      <label class="field">Storage <input name="storage" type="text" placeholder="256 GB, or not sure" /></label>
+      <label class="field">Link to photos <input name="photos" type="url" placeholder="https://" /></label>
+      <label class="field">Your email <input name="email" type="email" required autocomplete="email" /></label>
+      <label class="field">Note <textarea name="message" placeholder="What you want: a sale, or a trade toward something in the shop."></textarea></label>
+      <button class="btn btn-gold" type="submit" disabled data-arm>Send to the shop</button>
+      <p class="form-note" data-form-note>The button waits a few seconds. If no form service is connected, your email app opens.</p>
+    </form>
+  </div>
+</BaseLayout>

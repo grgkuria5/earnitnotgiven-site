@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateNote from '../components/TemplateNote.astro';
+import { settings } from '../lib/site';
+---
+<BaseLayout title="Privacy" description="How the Earn It Not Given website handles information. Template for George to review." path="/privacy">
+  <div class="wrap prose section">
+    <TemplateNote />
+    <h1>Privacy</h1>
+    <p>{settings.business_name} runs this website as a static site. There is no customer account and no shop database of orders on this host.</p>
+    <h2>What stays on your device</h2>
+    <p>The cart is saved in localStorage in your browser. The chat keeps the conversation on the page. A basic rate limit for forms and chat uses sessionStorage in that same browser. Clearing site data removes them.</p>
+    <h2>Payments</h2>
+    <p>Card numbers and PayPal passwords are entered on Stripe or PayPal, not here. Do not type them into the chat, the contact form, or a booking request. The site is built to refuse messages that look like card numbers or passwords.</p>
+    <h2>Email and forms</h2>
+    <p>Contact, booking, and the newsletter open an email to {settings.sales_email} unless George has set a form address in the site settings. If he has, the form is sent to that https address (for example Formspree or a newsletter host). That provider's policy then applies.</p>
+    <h2>Chat helper</h2>
+    <p>By default the helper answers from a FAQ file shipped with the site and from product titles. It does not call a server. If a chat address is later saved in settings, your question text can be sent to that https service. Localhost addresses are ignored so the public site never calls a computer in the shop by accident.</p>
+    <h2>Affiliate links</h2>
+    <p>When affiliate programs are turned on, those links are marked for browsers as sponsored. The partner may set its own cookies after you leave this site.</p>
+    <h2>What we do not ship</h2>
+    <p>This site does not include advertising trackers. GuardianOrbit location, if you use that app later, is not collected by these pages.</p>
+    <h2>California</h2>
+    <p>If you want to know what the shop has about you, email {settings.sales_email}. Orders that ran through PayPal, Stripe, Etsy, or Amazon are held by those companies. This website itself does not keep an order database.</p>
+  </div>
+</BaseLayout>

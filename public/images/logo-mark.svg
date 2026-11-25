@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Earn It Not Given">
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#e6c27a" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#f3e0b5" stroke-width="1.2"/>
+  <path d="M32 12l2.6 14.2L49 28.6 34.6 31.4 32 46l-2.6-14.6L15 28.6l14.4-2.4z" fill="#e6c27a"/>
+</svg>

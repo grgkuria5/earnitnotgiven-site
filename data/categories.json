@@ -1,0 +1,211 @@
+{
+  "categories": [
+    {
+      "id": "computers",
+      "label": "Computers",
+      "blurb": "Laptops, desktops, all-in-ones, servers, and monitors George has checked.",
+      "tone": "tech",
+      "icon": "laptop",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Computers",
+      "children": [
+        {"id": "laptops", "label": "Laptops", "blurb": "Notebooks and ultrabooks.", "tone": "tech", "icon": "laptop", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Laptops"},
+        {"id": "desktops", "label": "Desktops", "blurb": "Towers and small-form desktops.", "tone": "tech", "icon": "desktop", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Desktop Computers"},
+        {"id": "all-in-ones", "label": "All-in-Ones", "blurb": "Screen and computer in one case.", "tone": "tech", "icon": "desktop", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Desktop Computers"},
+        {"id": "servers", "label": "Servers & Workstations", "blurb": "Workstations and small servers.", "tone": "tech", "icon": "server", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Servers"},
+        {"id": "monitors", "label": "Monitors", "blurb": "Displays checked for a clean panel.", "tone": "tech", "icon": "monitor", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Monitors"}
+      ]
+    },
+    {
+      "id": "phones",
+      "label": "Cell Phones & Tablets",
+      "blurb": "Unlocked phones, tablets, and watches.",
+      "tone": "tech",
+      "icon": "phone",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Communications > Telephony",
+      "children": [
+        {"id": "iphone", "label": "iPhone", "blurb": "Apple phones.", "tone": "tech", "icon": "phone", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Communications > Telephony > Mobile Phones"},
+        {"id": "android", "label": "Android", "blurb": "Android phones.", "tone": "tech", "icon": "phone", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Communications > Telephony > Mobile Phones"},
+        {"id": "tablets", "label": "Tablets", "blurb": "Tablets.", "tone": "tech", "icon": "tablet", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Tablet Computers"},
+        {"id": "smartwatches", "label": "Smartwatches", "blurb": "Watches and bands.", "tone": "tech", "icon": "watch", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Electronics Accessories > Wearables"},
+        {"id": "unlocked", "label": "Unlocked / Carrier", "blurb": "Unlocked handsets and carrier-locked ones described honestly.", "tone": "tech", "icon": "phone", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Communications > Telephony > Mobile Phones"}
+      ]
+    },
+    {
+      "id": "parts",
+      "label": "Computer Parts",
+      "blurb": "CPUs, graphics cards, memory, storage, boards, and power supplies.",
+      "tone": "tech",
+      "icon": "cpu",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Computers > Computer Components",
+      "children": [
+        {"id": "cpus", "label": "CPUs", "blurb": "Processors.", "tone": "tech", "icon": "cpu", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Components > Computer Processors"},
+        {"id": "gpus", "label": "GPUs", "blurb": "Graphics cards.", "tone": "tech", "icon": "gpu", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Components > Video Cards"},
+        {"id": "ram", "label": "RAM", "blurb": "Memory.", "tone": "tech", "icon": "ram", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Components > Computer Memory"},
+        {"id": "storage", "label": "Storage / SSD / HDD", "blurb": "Drives.", "tone": "tech", "icon": "disk", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Components > Storage Devices"},
+        {"id": "motherboards", "label": "Motherboards", "blurb": "Boards.", "tone": "tech", "icon": "board", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Components > Motherboards"},
+        {"id": "power-supplies", "label": "Power Supplies", "blurb": "PSUs.", "tone": "tech", "icon": "plug", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Computers > Computer Components > Power Supplies"}
+      ]
+    },
+    {
+      "id": "networking",
+      "label": "Networking",
+      "blurb": "Routers, switches, firewalls, Wi-Fi, and lab gear.",
+      "tone": "tech",
+      "icon": "router",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Networking",
+      "children": [
+        {"id": "routers", "label": "Routers", "blurb": "Home and small-office routers.", "tone": "tech", "icon": "router", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Networking > Routers"},
+        {"id": "switches", "label": "Switches", "blurb": "Network switches.", "tone": "tech", "icon": "switch", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Networking > Bridges & Routers"},
+        {"id": "firewalls", "label": "Firewalls", "blurb": "Firewall appliances.", "tone": "tech", "icon": "shield", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Networking > Network Security & Firewall Devices"},
+        {"id": "wifi", "label": "Wi-Fi / Mesh", "blurb": "Access points and mesh kits.", "tone": "tech", "icon": "wifi", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Networking > Wireless Access Points"},
+        {"id": "cisco", "label": "Cisco Lab Gear", "blurb": "Used Cisco gear for a lab bench.", "tone": "tech", "icon": "switch", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Networking"},
+        {"id": "network-cables", "label": "Cables", "blurb": "Ethernet and fiber patch cables.", "tone": "tech", "icon": "cable", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Electronics Accessories > Cables"}
+      ]
+    },
+    {
+      "id": "accessories",
+      "label": "Accessories",
+      "blurb": "Chargers, cases, input devices, audio, and docks.",
+      "tone": "tech",
+      "icon": "cable",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Electronics Accessories",
+      "children": [
+        {"id": "chargers", "label": "Chargers & Cables", "blurb": "Power and cables.", "tone": "tech", "icon": "plug", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Electronics Accessories > Power > Power Adapters & Chargers"},
+        {"id": "cases", "label": "Cases", "blurb": "Phone and laptop cases.", "tone": "tech", "icon": "case", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Electronics Accessories > Electronics Films & Shields"},
+        {"id": "keyboards", "label": "Keyboards & Mice", "blurb": "Input devices.", "tone": "tech", "icon": "keyboard", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Electronics Accessories > Computer Accessories > Input Devices"},
+        {"id": "audio", "label": "Headphones & Audio", "blurb": "Headphones and speakers.", "tone": "tech", "icon": "headphones", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Audio > Audio Components > Headphones"},
+        {"id": "docks", "label": "Docks", "blurb": "USB-C and laptop docks.", "tone": "tech", "icon": "dock", "hidden": false, "kind": "catalog", "google_taxonomy": "Electronics > Electronics Accessories > Computer Accessories"}
+      ]
+    },
+    {
+      "id": "printers",
+      "label": "Printers & Office",
+      "blurb": "Printers and everyday office gear.",
+      "tone": "tech",
+      "icon": "printer",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Print, Copy, Scan & Fax",
+      "children": []
+    },
+    {
+      "id": "smart-home",
+      "label": "Smart Home",
+      "blurb": "Speakers, lights, and the hubs that run them.",
+      "tone": "tech",
+      "icon": "home",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Smart Home",
+      "children": []
+    },
+    {
+      "id": "gaming",
+      "label": "Gaming",
+      "blurb": "Consoles, headsets, and gaming PCs.",
+      "tone": "tech",
+      "icon": "game",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Electronics > Video Game Consoles",
+      "children": []
+    },
+    {
+      "id": "clothing",
+      "label": "Clothing",
+      "blurb": "Clothes from the shop, separate from the Etsy print line.",
+      "tone": "fashion",
+      "icon": "shirt",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Apparel & Accessories > Clothing",
+      "children": [
+        {"id": "tees", "label": "Tees & V-Necks", "blurb": "T-shirts.", "tone": "fashion", "icon": "shirt", "hidden": false, "kind": "catalog", "google_taxonomy": "Apparel & Accessories > Clothing > Shirts & Tops"},
+        {"id": "leggings", "label": "Leggings & Yoga Pants", "blurb": "Leggings.", "tone": "fashion", "icon": "shirt", "hidden": false, "kind": "catalog", "google_taxonomy": "Apparel & Accessories > Clothing > Pants"},
+        {"id": "jackets", "label": "Jackets", "blurb": "Jackets.", "tone": "fashion", "icon": "shirt", "hidden": false, "kind": "catalog", "google_taxonomy": "Apparel & Accessories > Clothing > Outerwear > Coats & Jackets"},
+        {"id": "hoodies", "label": "Hoodies", "blurb": "Hoodies and fleece.", "tone": "fashion", "icon": "shirt", "hidden": false, "kind": "catalog", "google_taxonomy": "Apparel & Accessories > Clothing > Shirts & Tops > Sweatshirts"}
+      ]
+    },
+    {
+      "id": "designs",
+      "label": "EarnItNotGiven Designs",
+      "blurb": "Print-on-demand designs. Checkout is on Etsy.",
+      "tone": "fashion",
+      "icon": "spark",
+      "hidden": false,
+      "kind": "link",
+      "href": "/designs",
+      "google_taxonomy": "Apparel & Accessories > Clothing",
+      "children": []
+    },
+    {
+      "id": "wall-art",
+      "label": "Wall Art & Digital Downloads",
+      "blurb": "Files delivered by Stripe, Etsy, or email.",
+      "tone": "fashion",
+      "icon": "image",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Arts & Entertainment > Hobbies & Creative Arts > Artwork",
+      "children": []
+    },
+    {
+      "id": "bundles",
+      "label": "Bundles",
+      "blurb": "Sets with one bundle price.",
+      "tone": "tech",
+      "icon": "box",
+      "hidden": false,
+      "kind": "link",
+      "href": "/bundles",
+      "google_taxonomy": "Electronics",
+      "children": []
+    },
+    {
+      "id": "refurbished",
+      "label": "Refurbished / Open Box",
+      "blurb": "Open-box and refurbished items from every category.",
+      "tone": "tech",
+      "icon": "refresh",
+      "hidden": false,
+      "kind": "condition",
+      "conditions": ["Refurbished", "Open Box"],
+      "google_taxonomy": "Electronics",
+      "children": []
+    },
+    {
+      "id": "flash-deals",
+      "label": "Flash Deals",
+      "blurb": "Short-window prices.",
+      "tone": "tech",
+      "icon": "tag",
+      "hidden": false,
+      "kind": "link",
+      "href": "/deals",
+      "google_taxonomy": "Electronics",
+      "children": []
+    },
+    {
+      "id": "amazon-picks",
+      "label": "Amazon Picks",
+      "blurb": "Affiliate links. Hidden prices. Shown when the Associates tag is set.",
+      "tone": "tech",
+      "icon": "cart",
+      "hidden": false,
+      "kind": "link",
+      "href": "/amazon-picks",
+      "google_taxonomy": "Electronics",
+      "children": []
+    }
+  ]
+}

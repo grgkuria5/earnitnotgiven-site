@@ -1,0 +1,23 @@
+---
+import { settings } from '../lib/site';
+const { compact = false } = Astro.props;
+const endpoint = settings.newsletter_form_action;
+---
+<section class="newsletter" aria-label={compact ? 'Footer email list' : 'Email list'}>
+  <p class="eyebrow">List</p>
+  <h2>{settings.welcome_promo_message}</h2>
+  {!compact && <p>Join the list and use code <strong>{settings.welcome_promo_code}</strong> on your first PayPal checkout. Stripe Payment Links keep the price set in Stripe.</p>}
+  {compact && <p>Code <strong>{settings.welcome_promo_code}</strong> on PayPal checkout.</p>}
+  <form data-guarded-form="newsletter" data-endpoint={endpoint} data-mail={settings.sales_email} data-subject="List signup" novalidate>
+    <p class="trap-field">
+      <label for={compact ? 'nl-co-f' : 'nl-co'}>Company website</label>
+      <input id={compact ? 'nl-co-f' : 'nl-co'} name="company_website" type="text" tabindex="-1" autocomplete="off" />
+    </p>
+    <input type="hidden" name="form_opened_at" value="" data-opened-at />
+    <label class="sr-only" for={compact ? 'nl-email-f' : 'nl-email'}>Email</label>
+    <input id={compact ? 'nl-email-f' : 'nl-email'} type="email" name={settings.newsletter_email_field} required autocomplete="email" placeholder="you@email.com" />
+    <button class="btn btn-gold" type="submit" disabled data-arm>Email me the code</button>
+    <p class="form-note" data-form-note>The button wakes up after a few seconds. No password, no card number.</p>
+  </form>
+  <p class="muted"><a href={`mailto:${settings.sales_email}?subject=List%20signup`}>Or email {settings.sales_email}</a></p>
+</section>
