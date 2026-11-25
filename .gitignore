@@ -24,6 +24,8 @@ tools/control-center/.env
 tools/control-center/.tokens.json
 tools/control-center/drafts/
 tools/control-center/data/
+__pycache__/
+*.pyc
 
 # macOS-specific files
 .DS_Store
