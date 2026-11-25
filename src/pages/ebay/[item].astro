@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { money, paypalReady } from '../../lib/pure';
+import { ebayProducts, settings, SITE } from '../../lib/site';
+
+export function getStaticPaths() {
+  return ebayProducts()
+    .filter((item) => item.id)
+    .map((item) => ({ params: { item: item.id } }));
+}
+
+const { item: itemId } = Astro.params;
+const listing = ebayProducts().find((item) => item.id === itemId);
+if (!listing) return Astro.redirect('/ebay');
+const paypal = paypalReady(settings.paypal_business_email);
+const tone = listing.category === 'collectibles' ? 'fashion' : 'tech';
+---
+<BaseLayout title={listing.title} description={`${listing.title}. ${listing.condition}. Shipping is shown before checkout.`} path={`/ebay/${listing.id}`} tone={tone} image={listing.image || '/images/og.png'}>
+  <div class="wrap section">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <a href="/ebay">Electronics (eBay)</a> <span>{listing.title}</span></nav>
+    <div class="product">
+    <div>
+      {listing.image ? <img src={listing.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+    </div>
+    <div class="buybox">
+      {listing.refreshed && listing.status === 'active' && <p class="seller-badge">Refreshed &amp; Tested by Seller</p>}
+      <h1>{listing.title}</h1>
+      <p class="muted">{listing.category === 'collectibles' ? 'Collectibles & More' : 'Electronics'} · {listing.condition} · seller workhard1140</p>
+      {listing.status !== 'active' && <p class="notice">Sale pending on this site. The eBay listing may still be open until it is ended there.</p>}
+      {listing.price !== null && (
+        <p class="price">
+          <span>{money(listing.price)}</span>
+          <span class="muted"> + {money(listing.shipping)} shipping</span>
+        </p>
+      )}
+      {listing.total !== null && <p>Total before checkout <strong>{money(listing.total)}</strong></p>}
+      {listing.shippingNote && <p class="muted">{listing.shippingNote}</p>}
+      {listing.buyDirect && paypal && listing.price !== null && (
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+          <input type="hidden" name="cmd" value="_xclick" />
+          <input type="hidden" name="business" value={settings.paypal_business_email} />
+          <input type="hidden" name="item_name" value={listing.title} />
+          <input type="hidden" name="item_number" value={listing.id} />
+          <input type="hidden" name="custom" value={listing.id} />
+          <input type="hidden" name="amount" value={listing.price.toFixed(2)} />
+          <input type="hidden" name="shipping" value={listing.shipping.toFixed(2)} />
+          <input type="hidden" name="currency_code" value="USD" />
+          <input type="hidden" name="no_shipping" value="2" />
+          <input type="hidden" name="charset" value="utf-8" />
+          <input type="hidden" name="return" value={`${SITE}/order/thanks/`} />
+          <button class="btn btn-gold" type="submit">Buy now</button>
+        </form>
+      )}
+      {listing.buyDirect && !paypal && <p class="muted">Buy now turns on when the PayPal business email is saved. The total above is the item plus shipping.</p>}
+      {listing.stripe && <p><a class="btn btn-ghost" href={listing.stripe} rel="noopener noreferrer" target="_blank">Pay with card (Stripe)</a></p>}
+      <p><a href={listing.url} rel="noopener noreferrer" target="_blank">Also on eBay</a></p>
+    </div>
+    </div>
+  </div>
+</BaseLayout>

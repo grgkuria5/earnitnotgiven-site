@@ -121,6 +121,17 @@
       "children": []
     },
     {
+      "id": "collectibles",
+      "label": "Collectibles & More",
+      "blurb": "Clothes, art, cards, and other pieces that are not tested electronics.",
+      "tone": "fashion",
+      "icon": "tag",
+      "hidden": false,
+      "kind": "catalog",
+      "google_taxonomy": "Arts & Entertainment",
+      "children": []
+    },
+    {
       "id": "clothing",
       "label": "Clothing",
       "blurb": "Clothes from the shop, separate from the Etsy print line.",

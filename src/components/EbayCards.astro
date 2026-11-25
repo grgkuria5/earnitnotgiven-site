@@ -7,12 +7,12 @@ const paypal = paypalReady(settings.paypal_business_email);
 ---
 {items.map((item) => (
   <article class="card" data-item data-title={item.title} data-price={item.total ?? item.price ?? 0} data-condition={item.condition} data-type="physical" data-search={item.title.toLowerCase()}>
-    <a href={item.url} rel="noopener noreferrer" target="_blank">
+    <a href={`/ebay/${item.id}`}>
       {item.image ? <img src={item.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
     </a>
     {item.refreshed && item.status === 'active' && <SellerRibbon />}
-    <h3><a href={item.url} rel="noopener noreferrer" target="_blank">{item.title}</a></h3>
-    <p class="meta muted">Electronics · eBay seller workhard1140 · {item.condition}</p>
+    <h3><a href={`/ebay/${item.id}`}>{item.title}</a></h3>
+    <p class="meta muted">{item.category === 'collectibles' ? 'Collectibles & More' : 'Electronics'} · eBay seller workhard1140 · {item.condition}</p>
     {item.status !== 'active' && <p class="notice">Sale pending on this site. The eBay listing may still be open until it is ended there.</p>}
     {item.price !== null && (
       <p class="price">

@@ -282,17 +282,19 @@ html[data-shift="on"] .btn-gold {
 .refresh-rotator p { margin: 0; font-weight: 650; }
 .seller-ribbon {
   position: absolute;
-  top: 18px;
-  right: -46px;
+  top: 10px;
+  right: 10px;
   z-index: 2;
-  transform: rotate(35deg);
-  padding: 0.32rem 2.6rem;
-  background: linear-gradient(90deg, #f6e7c1, #e0b45a 40%, #f6e7c1);
+  max-width: calc(100% - 20px);
+  padding: 0.35rem 0.55rem;
+  background: linear-gradient(90deg, #f6e7c1, #e0b45a 55%, #f6e7c1);
   color: #1a140c;
   font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
   text-transform: uppercase;
+  text-align: right;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
   pointer-events: none;
 }
@@ -394,6 +396,7 @@ html[data-shift="on"] .btn-gold {
 .layout { display: grid; gap: 1rem; }
 .filters { display: grid; gap: 0.6rem; background: var(--bg-elev); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.9rem; }
 .product { display: grid; gap: 1.2rem; }
+.product img { width: 100%; max-height: 560px; object-fit: contain; background: #0c0a08; }
 .gallery img { width: 100%; border-radius: var(--radius); border: 1px solid var(--line); background: #0c121a; }
 .thumbs { display: flex; gap: 0.4rem; margin-top: 0.5rem; }
 .thumbs button { padding: 0; border-radius: 10px; border: 1px solid var(--line); background: transparent; }

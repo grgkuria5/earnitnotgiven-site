@@ -57,8 +57,33 @@ def shipping_amount(category: str, subcategory: str) -> float:
     return 12.0
 
 
+def parse_delivery(note: str) -> float | None:
+    """eBay now says 'Free delivery' or '+$X delivery', not only 'shipping'."""
+    text = (note or "").lower()
+    if "free delivery" in text or "free shipping" in text:
+        return 0.0
+    match = re.search(r"\+?\s*\$(\d+(?:\.\d{1,2})?)", note or "")
+    if match and "delivery" in text:
+        return round(float(match.group(1)), 2)
+    return None
+
+
+def delivery_phrase(text: str) -> str:
+    free = re.search(r"free delivery", text, re.I)
+    if free:
+        return "Free delivery"
+    paid = re.search(r"\+\$\d+(?:\.\d{2})?\s+delivery(?:\s+in\s+[\d–-]+\s+days)?", text, re.I)
+    if paid:
+        return paid.group(0)
+    if re.search(r"free shipping", text, re.I):
+        return "Free delivery"
+    return ""
+
+
 def listing(title: str, url: str, price, condition: str, image: str, shipping_note: str) -> dict:
     category, sub = guess_category(title)
+    parsed = parse_delivery(shipping_note)
+    electronics = category != "collectibles"
     return {
         "item_id": item_id(url),
         "title": title,
@@ -69,19 +94,43 @@ def listing(title: str, url: str, price, condition: str, image: str, shipping_no
         "category": category,
         "subcategory": sub,
         "shipping_note": shipping_note,
-        "shipping_usd": shipping_amount(category, sub),
+        "shipping_usd": parsed if parsed is not None else shipping_amount(category, sub),
         "buy_direct": True,
         "stripe_payment_link": "",
         "status": "active",
-        "refreshed_tested": True,
+        "refreshed_tested": electronics,
     }
 
 
 def guess_category(title: str) -> tuple[str, str]:
     text = title.lower()
-    for words, category, sub in GUESSES:
-        if any(word in text for word in words):
-            return category, sub
+    if any(word in text for word in ("hoodie", "jersey", "oil painting", "bento", "panini", "football card")):
+        return "collectibles", ""
+    if any(word in text for word in ("printer", "laserjet", "inkjet")):
+        return "printers", ""
+    if any(word in text for word in ("power supply", "psu", "hot-swap")):
+        return "computers", "servers"
+    if "motherboard" in text:
+        return "parts", "motherboards"
+    whole_pc = any(word in text for word in ("optiplex", "latitude", "precision", "desktop", "laptop", "notebook"))
+    if not whole_pc and any(word in text for word in ("core i", "processor", "cpu")):
+        return "parts", "cpus"
+    if not whole_pc and any(word in text for word in ("radeon", "geforce", "firepro", "graphics card")):
+        return "parts", "gpus"
+    if any(word in text for word in ("network card", "10gbe", "gateway", "edgemarc", "brocade", "sfp", "router")):
+        if "cable" in text or "sfp" in text:
+            return "networking", "network-cables"
+        if "network card" in text or "10gbe" in text:
+            return "networking", ""
+        return "networking", "routers"
+    if "gpib" in text or "ieee-488" in text:
+        return "parts", ""
+    if "dock" in text:
+        return "accessories", "docks"
+    if any(word in text for word in ("latitude", "laptop", "notebook")):
+        return "computers", "laptops"
+    if any(word in text for word in ("optiplex", "precision", "desktop", "sff", "tower")):
+        return "computers", "desktops"
     return "computers", ""
 
 
@@ -145,8 +194,9 @@ def parse_rss(body: bytes) -> list[dict]:
                 money = re.search(r"\$(\d+(?:,\d{3})*(?:\.\d{2})?)", text)
                 if money and price is None:
                     price = float(money.group(1).replace(",", ""))
-                if "free shipping" in text.lower():
-                    shipping = "Free shipping on eBay."
+                phrase = delivery_phrase(text)
+                if phrase:
+                    shipping = phrase
         if title and link.startswith("https://www.ebay.com/itm/"):
             rows.append(listing(title, link, price, condition, image, shipping))
     return rows
@@ -175,7 +225,7 @@ def parse_html(body: bytes) -> list[dict]:
                 float(price_match.group(1).replace(",", "")) if price_match else None,
                 "See the eBay listing",
                 image_match.group(0) if image_match else "",
-                "Shipping is calculated on eBay.",
+                delivery_phrase(window) or "Shipping is calculated on eBay.",
             )
         )
         if len(rows) >= 50:
