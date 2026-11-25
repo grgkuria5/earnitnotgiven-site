@@ -407,12 +407,14 @@ PAGE = """<!doctype html>
       <button class="ghost" type="button" data-tab="sync">Sync ideas</button>
       <button class="ghost" type="button" data-tab="sales">Sales</button>
       <button class="ghost" type="button" data-tab="labels">Shipping Station</button>
+      <button class="ghost" type="button" data-tab="spec">Spec Checker</button>
     </nav>
     <section id="panel" class="grid"></section>
   </main>
   <script>
     const sampleDrafts = %%SAMPLE%%;
     const sampleOrders = %%ORDERS%%;
+    const specProviders = %%SPEC%%;
     const tabs = {
       listings: `<form data-tool="listing" class="card"><h2>Bulk listing drafts</h2><p class="muted">Paste notes, one product per line. Suggested prices are suggestions.</p><textarea name="notes" rows="6">SAMPLE used laptop, 16 GB RAM, battery lasts a school day</textarea><button class="gold" type="submit">Draft listings</button></form>`,
       promos: `<form data-tool="promo" class="card"><h2>Promo and flash-deal drafts</h2><p class="muted">A social caption and a weekly flash-deal idea. You still post them yourself.</p><button class="gold" type="submit">Draft this week</button></form>`,
@@ -420,6 +422,7 @@ PAGE = """<!doctype html>
       guides: `<form data-tool="guide" class="card"><h2>Guide draft</h2><input name="topic" placeholder="Topic" /><button class="gold" type="submit">Draft a guide</button></form>`,
       ship: `<div class="card"><h2>Ship checklist and low stock</h2><div id="stock"></div><form data-tool="checklist"><button class="gold" type="submit">Draft the checklist</button></form></div>`,
       sync: `<form data-tool="sync" class="card"><h2>Description sync suggestions</h2><textarea name="notes" rows="5" placeholder="Paste an Etsy description and the site description"></textarea><button class="gold" type="submit">Draft suggestions</button></form>`,
+      spec: `<div class="card"><h2>Spec Checker</h2><p class="muted">Opens the maker’s own page. It does not scrape it. Sample row is not a real machine.</p><label>Lookup<select id="spec-provider">${specProviders.map(p => `<option value="${p.id}">${p.group}: ${p.label}</option>`).join("")}</select></label><label>Tag, serial, model, IMEI, or UPC<input id="spec-id" value="SAMPLE7X" /></label><button class="gold" type="button" id="spec-go">Open official page</button><pre id="spec-out" class="muted">SAMPLE suggestion for Dell: category computers / laptops. Support URL is Dell’s service-tag page.</pre></div>`,
       labels: `<div class="card sample"><h2>Shipping Station</h2><p class="banner">SAMPLE DATA. Buy label will not purchase anything.</p><p>Order SAMPLE-1001 · Sample Buyer · Palo Alto, CA · customer paid shipping</p><p>Parcel preset: 8 oz, 10 x 8 x 1 in</p><table><tr><th>Carrier</th><th>Service</th><th>Rate</th></tr><tr><td>USPS</td><td>Ground Advantage</td><td>$6.40</td></tr><tr><td>UPS</td><td>Ground</td><td>$9.15</td></tr></table><p><a class="link" href="/packing-slip/sample" target="_blank">Open sample packing slip</a></p><form id="buy-form"><input type="hidden" name="rate_id" value="SAMPLE-USPS" /><button class="gold" type="submit">Buy label</button></form><p id="buy-note" class="muted">One click buys a real label only when a carrier key is set and the rate is under your caps. Auto-buy is off.</p></div>`,
       sales: `<div class="card sample"><h2>Sales</h2><p class="banner">SAMPLE DATA — not your shop. Connect Etsy to replace it.</p><p><a class="link" href="/auth/start">Connect Etsy</a> <a class="link" href="/export.csv">Export CSV</a></p><table><thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead><tbody>${sampleOrders.map(row => `<tr><td>${row.id}<br>${row.title}</td><td>${row.status}</td><td>$${row.total.toFixed(2)}</td></tr>`).join("")}</tbody></table><form id="ship-form"><h3>Mark shipped</h3><input name="receipt_id" value="SAMPLE-1001" /><input name="carrier" value="usps" /><input name="tracking" placeholder="Tracking number" /><label><input type="checkbox" name="confirm" value="yes" /> I mean to send this to Etsy</label><button class="gold" type="submit">Submit tracking</button><p id="ship-note" class="muted"></p></form><form id="manual"><h3>Log a site order</h3><input name="title" placeholder="Title" /><input name="total" placeholder="Total" /><button class="ghost" type="submit">Save locally</button></form></div>`
     };
@@ -437,6 +440,13 @@ PAGE = """<!doctype html>
         note.textContent = body.message || body.error || "Saved a draft.";
         form.append(note);
       }));
+      const specGo = document.querySelector("#spec-go");
+      if (specGo) specGo.addEventListener("click", async () => {
+        const res = await fetch("/api/spec/lookup", {method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({provider: document.querySelector("#spec-provider").value, identifier: document.querySelector("#spec-id").value})});
+        const body = await res.json();
+        document.querySelector("#spec-out").textContent = JSON.stringify(body, null, 2);
+        if (body.links && body.links[0]) window.open(body.links[0].url, "_blank", "noopener");
+      });
       const buy = document.querySelector("#buy-form");
       if (buy) buy.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -566,7 +576,8 @@ class Handler(BaseHTTPRequestHandler):
             return
         path = urllib.parse.urlparse(self.path).path
         if path == "/":
-            page = PAGE.replace("%%SAMPLE%%", json.dumps(SAMPLE_DRAFTS)).replace("%%ORDERS%%", json.dumps(SAMPLE_ORDERS))
+            from spec_checker import providers
+            page = PAGE.replace("%%SAMPLE%%", json.dumps(SAMPLE_DRAFTS)).replace("%%ORDERS%%", json.dumps(SAMPLE_ORDERS)).replace("%%SPEC%%", json.dumps(providers()))
             self._send(200, page.encode(), "text/html; charset=utf-8")
             return
         if path == "/api/status":
@@ -678,6 +689,24 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(500, {"error": str(exc)[:300]})
                 return
             self._json(200, {"message": message})
+            return
+        if path == "/api/spec/lookup":
+            from spec_checker import build_links, read_cache, suggest_category, write_cache
+            provider = str(payload.get("provider") or "dell")
+            identifier = str(payload.get("identifier") or "")
+            try:
+                links = build_links(provider, identifier)
+            except (KeyError, ValueError) as exc:
+                self._json(400, {"error": str(exc)})
+                return
+            suggestion = suggest_category(provider)
+            record = {"identifier": identifier, "provider": provider, "links": links, "suggestion": suggestion, "sample": identifier.upper().startswith("SAMPLE")}
+            if not record["sample"]:
+                write_cache(DATA / "spec-cache", provider, identifier, record)
+            else:
+                cached = read_cache(DATA / "spec-cache", provider, identifier)
+                record["cached"] = bool(cached)
+            self._json(200, record)
             return
         if path == "/api/shipping/buy":
             from shipping_station import append_log, buy_label, decide, load_settings
