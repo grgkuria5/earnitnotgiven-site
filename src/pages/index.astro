@@ -3,14 +3,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import Newsletter from '../components/Newsletter.astro';
 import TrustStrip from '../components/TrustStrip.astro';
+import RefreshSplash from '../components/RefreshSplash.astro';
 import Orbit from '../components/Orbit.astro';
-import { allProducts, etsyProducts, priceOf, settings, SITE, visibleCategories } from '../lib/site';
+import { allProducts, ebayProducts, etsyProducts, priceOf, settings, SITE, visibleCategories } from '../lib/site';
+import EbayCards from '../components/EbayCards.astro';
 import { money } from '../lib/pure';
 
 const products = await allProducts();
 const deals = products.filter((product) => product.data.featured || priceOf(product) < product.data.price).slice(0, 8);
 const flash = products.filter((product) => typeof product.data.flash_price === 'number' && product.data.flash_start && product.data.flash_end);
 const designs = etsyProducts().slice(0, 8);
+const ebay = ebayProducts().filter((item) => item.status === 'active').slice(0, 8);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Store',
@@ -22,6 +25,8 @@ const jsonLd = {
 };
 ---
 <BaseLayout title="Hand-tested tech in Palo Alto" description={settings.tagline} path="/" jsonLd={jsonLd}>
+  <RefreshSplash />
+  <div class="shift-hero">
   <section class="wrap hero">
     <figure class="hero-mark">
       <img
@@ -53,6 +58,7 @@ const jsonLd = {
       </aside>
     </div>
   </section>
+  </div>
   <TrustStrip />
   {flash.length > 0 && (
     <section class="wrap section" data-flash-strip>
@@ -86,6 +92,17 @@ const jsonLd = {
         {deals.map((product) => <ProductCard product={product} />)}
       </div>
     ) : <p class="empty">Nothing on the bench yet. The designs below are the live print shop.</p>}
+  </section>
+
+  <section class="wrap section tone-tech" id="ebay">
+    <h2>Electronics (eBay)</h2>
+    <p class="muted">Copied from seller workhard1140. Buy now charges the item price plus the shipping rate shown on the card. Also on eBay stays as a second link. The eBay listing itself is not changed from this site.</p>
+    {ebay.length ? (
+      <div class="grid cards">
+        <EbayCards items={ebay} />
+      </div>
+    ) : <p class="empty">No active eBay listings are copied in yet.</p>}
+    <p><a href="/ebay">All electronics from eBay</a></p>
   </section>
 
   <section class="wrap section tone-fashion" id="designs">

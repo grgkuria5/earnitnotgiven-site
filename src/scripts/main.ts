@@ -474,6 +474,21 @@ function initFlash() {
   window.setInterval(tick, 1000);
 }
 
+function initRefresh() {
+  const root = document.querySelector<HTMLElement>('[data-refresh-splash]');
+  if (!root) return;
+  const lines = [...root.querySelectorAll<HTMLElement>('[data-refresh-line]')];
+  if (lines.length < 2) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let index = 0;
+  window.setInterval(() => {
+    lines[index].hidden = true;
+    index = (index + 1) % lines.length;
+    lines[index].hidden = false;
+  }, 4200);
+}
+
+initRefresh();
 initFlash();
 initNav();
 initCount();

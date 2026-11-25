@@ -9,6 +9,17 @@
   "other_affiliate_id": "",
   "app_store_url": "",
   "active_theme": "default",
+  "color_shift": true,
+  "color_shift_seconds": 16,
+  "shift_gold": "#e0b45a",
+  "shift_blue": "#1c3f73",
+  "shift_teal": "#1f7a72",
+  "ebay_flat_shipping_usd": 12,
+  "refreshed_banner": true,
+  "refreshed_messages": [
+    "Every device refreshed and tested by the seller",
+    "Inspected, cleaned & tested before shipping"
+  ],
   "contact_email": "george@earnitnotgiven.com",
   "sales_email": "sales@earnitnotgiven.com",
   "location_label": "Palo Alto, CA",

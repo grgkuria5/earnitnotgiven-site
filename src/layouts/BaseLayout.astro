@@ -1,4 +1,5 @@
 ---
+import 'virtual:shift.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -23,7 +24,7 @@ const scriptHashes = ld ? [createHash('sha256').update(ld, 'utf8').digest('base6
 const csp = `${await contentSecurityPolicy().then((policy) => policy.replace("script-src 'self'", `script-src 'self'${scriptHashes.map((hash) => ` 'sha256-${hash}'`).join('')}`))}`;
 ---
 <!doctype html>
-<html lang="en" data-theme={settings.active_theme}>
+<html lang="en" data-theme={settings.active_theme} data-shift={settings.color_shift ? 'on' : 'off'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

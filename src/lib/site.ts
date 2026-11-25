@@ -7,6 +7,8 @@ import bannersJson from '../../data/banners.json';
 import picksJson from '../../data/affiliate-picks.json';
 import reviewsJson from '../../data/reviews.json';
 import categoriesJson from '../../data/categories.json';
+import ebayJson from '../../data/ebay-products.json';
+import shippingRatesJson from '../../data/shipping-rates.json';
 import {
   amazonLink,
   buildCsp,
@@ -18,6 +20,7 @@ import {
   originOf,
   publicHttpsUrl,
   safeUrl,
+  stripeLink,
   type FaqItem,
   type Settings,
 } from './pure';
@@ -177,6 +180,71 @@ export function etsyProducts(): EtsyDesign[] {
     .filter((row): row is EtsyDesign => row !== null);
 }
 
+export type EbayListing = {
+  id: string;
+  title: string;
+  url: string;
+  price: number | null;
+  shipping: number;
+  total: number | null;
+  image: string;
+  condition: string;
+  category: string;
+  subcategory: string;
+  shippingNote: string;
+  buyDirect: boolean;
+  stripe: string;
+  status: string;
+  refreshed: boolean;
+};
+
+export function ebayProducts(): EbayListing[] {
+  const raw = ebayJson as { seller?: string; products?: Record<string, unknown>[] };
+  if (raw.seller && raw.seller !== 'workhard1140') return [];
+  const rates = shippingRatesJson as Record<string, number>;
+  const rows = Array.isArray(raw.products) ? raw.products : [];
+  return rows
+    .map((row) => {
+      const itemUrl = publicHttpsUrl(String(row.url ?? ''));
+      const host = itemUrl ? new URL(itemUrl).hostname.toLowerCase() : '';
+      if (!itemUrl || !(host === 'ebay.com' || host.endsWith('.ebay.com'))) return null;
+      const title = String(row.title ?? '').trim();
+      if (!title) return null;
+      const price = typeof row.price === 'number' ? row.price : null;
+      const category = String(row.category ?? '');
+      const subcategory = String(row.subcategory ?? '');
+      const override = typeof row.shipping_usd === 'number' ? row.shipping_usd : null;
+      const shipping = override ?? rates[subcategory] ?? rates[category] ?? rates.default ?? settings.ebay_flat_shipping_usd;
+      const status = row.status === 'pending' || row.status === 'sold' ? row.status : 'active';
+      return {
+        id: String(row.item_id ?? ''),
+        title,
+        url: itemUrl.split('?')[0],
+        price,
+        shipping: Math.round(Number(shipping) * 100) / 100,
+        total: price === null ? null : Math.round((price + Number(shipping)) * 100) / 100,
+        image: safeUrl(String(row.image ?? '')),
+        condition: String(row.condition ?? ''),
+        category,
+        subcategory,
+        shippingNote: String(row.shipping_note ?? ''),
+        buyDirect: row.buy_direct !== false && status === 'active' && price !== null,
+        stripe: stripeLink(String(row.stripe_payment_link ?? '')),
+        status,
+        refreshed: row.refreshed_tested !== false,
+      };
+    })
+    .filter((row): row is EbayListing => row !== null);
+}
+
+export function ebayForCategory(node: CategoryNode): EbayListing[] {
+  return ebayProducts().filter((item) => {
+    if (item.status === 'sold') return false;
+    if (item.category === node.id || item.subcategory === node.id) return true;
+    return node.children.some((child) => child.id === item.subcategory || child.id === item.category);
+  });
+}
+
 export function etsyForCategory(node: CategoryNode): EtsyDesign[] {
   return etsyProducts().filter((design) => {
     if (node.id === 'clothing') return design.category === 'clothing';
@@ -246,6 +314,10 @@ export function faqItems(): FaqItem[] {
 export async function contentSecurityPolicy(): Promise<string> {
   const hosts = new Set<string>();
   for (const product of etsyProducts()) {
+    const host = hostOf(product.image);
+    if (host) hosts.add(host);
+  }
+  for (const product of ebayProducts()) {
     const host = hostOf(product.image);
     if (host) hosts.add(host);
   }

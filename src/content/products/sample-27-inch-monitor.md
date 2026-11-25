@@ -8,6 +8,7 @@ sale_price: 159
 quantity: 1
 featured: true
 sample: true
+refreshed_tested: true
 sku: SAMPLE-MON-27
 brand: SampleBrand
 summary: Placeholder monitor listing. Not for sale.

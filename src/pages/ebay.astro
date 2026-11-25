@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EbayCards from '../components/EbayCards.astro';
+import { ebayProducts } from '../lib/site';
+const items = ebayProducts().filter((item) => item.status !== 'sold');
+---
+<BaseLayout title="Electronics (eBay)" description="George's workhard1140 electronics, refreshed and tested, with the shipping cost shown before checkout." path="/ebay" tone="tech">
+  <div class="wrap section">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span>Electronics (eBay)</span></nav>
+    <p class="eyebrow">Seller workhard1140</p>
+    <h1>Electronics (eBay)</h1>
+    <p class="muted">These are the active listings from that public eBay account, copied here so you can buy on this site. The eBay listing stays posted. The price above the button is the item. Shipping is the flat rate for that kind of item, and the total is what PayPal charges.</p>
+    {items.length ? (
+      <div class="grid cards">
+        <EbayCards items={items} />
+      </div>
+    ) : <p class="empty">No active eBay listings are in the catalog yet. The importer fills this page from the public seller list. Nothing was invented.</p>}
+  </div>
+</BaseLayout>

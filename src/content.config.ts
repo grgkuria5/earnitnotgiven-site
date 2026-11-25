@@ -51,6 +51,7 @@ const products = defineCollection({
     local_pickup: z.boolean().default(false),
     pickup_stripe_link: z.string().default(''),
     gtin: z.string().default(''),
+    refreshed_tested: z.boolean().default(false),
   }),
 });
 

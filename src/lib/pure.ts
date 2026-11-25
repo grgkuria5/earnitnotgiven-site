@@ -35,6 +35,14 @@ export type Settings = {
   analytics_provider: '' | 'cloudflare' | 'goatcounter';
   analytics_token: string;
   promo_codes: PromoCode[];
+  color_shift: boolean;
+  color_shift_seconds: number;
+  shift_gold: string;
+  shift_blue: string;
+  shift_teal: string;
+  refreshed_banner: boolean;
+  refreshed_messages: string[];
+  ebay_flat_shipping_usd: number;
 };
 
 export type FaqItem = {
@@ -53,6 +61,17 @@ export type ChatReply = {
 };
 
 const THEMES: ThemeName[] = ['default', 'holiday', 'sale'];
+
+export function hexColor(value: unknown, fallback: string): string {
+  const raw = String(value ?? '').trim();
+  return /^#[0-9a-fA-F]{6}$/.test(raw) ? raw : fallback;
+}
+
+export function shiftSeconds(value: unknown): number {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return 16;
+  return Math.min(20, Math.max(12, Math.round(n)));
+}
 
 export function escapeHtml(value: string): string {
   return value
@@ -313,6 +332,24 @@ export function normalizeSettings(input: unknown): Settings {
       : '') as '' | 'cloudflare' | 'goatcounter',
     analytics_token: asString(raw.analytics_token).replace(/[^a-zA-Z0-9._-]/g, ''),
     promo_codes,
+    color_shift: raw.color_shift !== false,
+    color_shift_seconds: shiftSeconds(raw.color_shift_seconds),
+    shift_gold: hexColor(raw.shift_gold, '#e0b45a'),
+    shift_blue: hexColor(raw.shift_blue, '#1c3f73'),
+    shift_teal: hexColor(raw.shift_teal, '#1f7a72'),
+    refreshed_banner: raw.refreshed_banner !== false,
+    ebay_flat_shipping_usd: (() => {
+      const amount = Number(raw.ebay_flat_shipping_usd);
+      return Number.isFinite(amount) ? Math.min(200, Math.max(0, Math.round(amount * 100) / 100)) : 12;
+    })(),
+    refreshed_messages: (Array.isArray(raw.refreshed_messages) ? raw.refreshed_messages : [
+      'Every device refreshed and tested by the seller',
+      'Inspected, cleaned & tested before shipping',
+    ]).map((item) => {
+      if (typeof item === 'string') return item.trim().slice(0, 140);
+      if (item && typeof item === 'object' && 'message' in item) return asString((item as { message?: unknown }).message).slice(0, 140);
+      return '';
+    }).filter(Boolean).slice(0, 8),
   };
 }
 

@@ -137,6 +137,18 @@
       ]
     },
     {
+      "id": "ebay",
+      "label": "Electronics (eBay)",
+      "blurb": "Active listings from the public eBay account workhard1140.",
+      "tone": "tech",
+      "icon": "laptop",
+      "hidden": false,
+      "kind": "link",
+      "href": "/ebay",
+      "google_taxonomy": "Electronics",
+      "children": []
+    },
+    {
       "id": "designs",
       "label": "EarnItNotGiven Designs",
       "blurb": "Print-on-demand designs. Checkout is on Etsy.",

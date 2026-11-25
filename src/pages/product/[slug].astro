@@ -89,6 +89,7 @@ const jsonLd = {
         data-flash-stripe={hasFlash ? flashStripe : undefined}
       >
         {product.data.sample && <p class="flag inline">Sample</p>}
+        {product.data.refreshed_tested && <p class="seller-badge">Refreshed &amp; Tested by Seller</p>}
         <h1>{product.data.title}</h1>
         <p class="muted">{product.data.condition}{product.data.brand ? ` · ${product.data.brand}` : ''}</p>
         {hasFlash && (

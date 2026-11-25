@@ -56,6 +56,7 @@ collections:
       - { label: Quantity, name: quantity, widget: number, value_type: int, min: 0, default: 1 }
       - { label: Featured, name: featured, widget: boolean, default: false }
       - { label: Sample placeholder, name: sample, widget: boolean, default: false, hint: "Sample listings show a Sample label and cannot be checked out." }
+      - { label: Refreshed and tested by seller, name: refreshed_tested, widget: boolean, default: false, hint: "Gold ribbon on this electronics listing. Leave off for Etsy print-on-demand." }
       - { label: Draft, name: draft, widget: boolean, default: false, hint: "Draft products are not on the public site." }
       - { label: SKU, name: sku, widget: string, required: false }
       - { label: Brand, name: brand, widget: string, required: false }
@@ -143,6 +144,18 @@ collections:
             name: active_theme
             widget: select
             options: [default, holiday, sale]
+          - { label: Color shift, name: color_shift, widget: boolean, default: true, hint: "Slow gold, blue, and teal wash moving right to left. Off keeps a still dark background." }
+          - { label: Color shift seconds, name: color_shift_seconds, widget: number, value_type: int, min: 12, max: 20, default: 16, hint: "Loop length. 12 is quicker. 20 is slower." }
+          - { label: Shift gold, name: shift_gold, widget: string, default: "#e0b45a", hint: "Hex color, such as #e0b45a." }
+          - { label: Shift blue, name: shift_blue, widget: string, default: "#1c3f73" }
+          - { label: Shift teal, name: shift_teal, widget: string, default: "#1f7a72" }
+          - { label: Refreshed banner, name: refreshed_banner, widget: boolean, default: true, hint: "Home and tech category pages. Not used on Etsy designs." }
+          - label: Refreshed messages
+            name: refreshed_messages
+            widget: list
+            hint: "Rotates on the home page and tech categories. One line each."
+            field: { label: Message, name: message, widget: string }
+          - { label: eBay flat shipping USD, name: ebay_flat_shipping_usd, widget: number, value_type: float, min: 0, max: 200, default: 12, hint: "Used when a category rate and the item rate are blank. Shown before Buy now." }
           - { label: Contact email, name: contact_email, widget: string }
           - { label: Sales email, name: sales_email, widget: string }
           - { label: Location label, name: location_label, widget: string }
@@ -324,3 +337,45 @@ collections:
                 widget: select
                 options: [amazon, newegg, bestbuy, bh, other]
               - { label: Blurb, name: blurb, widget: text, required: false }
+
+  - name: ebay-shop
+    label: Electronics (eBay)
+    files:
+      - label: Listings copied from workhard1140
+        name: ebay-products
+        file: data/ebay-products.json
+        hint: "Buy on this site is on unless you turn it off. Refresh from the Control Center. Do not end the eBay listing here."
+        fields:
+          - { label: Seller, name: seller, widget: string }
+          - label: Listings
+            name: products
+            widget: list
+            fields:
+              - { label: Item id, name: item_id, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: Price USD, name: price, widget: number, value_type: float, min: 0 }
+              - { label: Shipping USD, name: shipping_usd, widget: number, value_type: float, min: 0 }
+              - { label: Buy on this site, name: buy_direct, widget: boolean, default: true }
+              - { label: Stripe Payment Link, name: stripe_payment_link, widget: string, required: false }
+              - label: Status
+                name: status
+                widget: select
+                options: [active, pending, sold]
+                default: active
+              - { label: eBay URL, name: url, widget: string }
+              - { label: Condition, name: condition, widget: string }
+              - { label: Category id, name: category, widget: string }
+              - { label: Subcategory id, name: subcategory, widget: string, required: false }
+              - { label: Shipping note, name: shipping_note, widget: string, required: false }
+              - { label: Refreshed and tested, name: refreshed_tested, widget: boolean, default: true }
+      - label: Shipping rates
+        name: shipping-rates
+        file: data/shipping-rates.json
+        fields:
+          - { label: Default, name: default, widget: number, value_type: float, min: 0 }
+          - { label: Laptops, name: laptops, widget: number, value_type: float, min: 0 }
+          - { label: Desktops, name: desktops, widget: number, value_type: float, min: 0 }
+          - { label: Monitors, name: monitors, widget: number, value_type: float, min: 0 }
+          - { label: GPUs, name: gpus, widget: number, value_type: float, min: 0 }
+          - { label: Printers, name: printers, widget: number, value_type: float, min: 0 }
+          - { label: Phones, name: phones, widget: number, value_type: float, min: 0 }

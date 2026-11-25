@@ -6,6 +6,7 @@ condition: Used - Like New
 price: 79
 quantity: 1
 sample: true
+refreshed_tested: true
 sku: SAMPLE-HP-01
 brand: SampleBrand
 summary: Placeholder headphones. Not for sale.

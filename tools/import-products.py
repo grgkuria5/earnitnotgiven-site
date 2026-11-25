@@ -74,7 +74,7 @@ def main() -> int:
             if sale:
                 lines.append(f"sale_price: {sale}")
             lines.append(f"quantity: {(row.get('quantity') or '1').strip() or '1'}")
-            for key in ("featured", "sample", "draft", "paypal_enabled", "digital", "ai_assisted"):
+            for key in ("featured", "sample", "draft", "paypal_enabled", "digital", "ai_assisted", "refreshed_tested"):
                 lines.append(f"{key}: {'true' if truthy(row.get(key) or '') else 'false'}")
             for key in ("sku", "brand", "summary", "stripe_payment_link", "amazon_url", "etsy_delivery_url", "shipping_note"):
                 lines.append(f"{key}: {yaml_string((row.get(key) or '').strip())}")

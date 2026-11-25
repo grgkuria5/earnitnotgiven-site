@@ -1,6 +1,7 @@
 ---
 import { flashPercent, money, effectivePrice, parsePacific } from '../lib/pure';
 import { productHref, type ProductEntry } from '../lib/site';
+import SellerRibbon from './SellerRibbon.astro';
 const { product, flash = false } = Astro.props as { product: ProductEntry; flash?: boolean };
 const price = effectivePrice(product.data.price, product.data.sale_price);
 const onSale = typeof product.data.sale_price === 'number' && product.data.sale_price < product.data.price;
@@ -34,6 +35,7 @@ const off = flashPrice ? flashPercent(product.data.price, flashPrice) : 0;
     {flash && off > 0 && <span class="save">{off}% off</span>}
     {!flash && product.data.product_type === 'bundle' && product.data.bundle_savings ? <span class="save">Save {money(product.data.bundle_savings)}</span> : null}
   </a>
+  {product.data.refreshed_tested && <SellerRibbon />}
   <h3><a href={href}>{product.data.title}</a></h3>
   <p class="meta muted">{product.data.condition}{product.data.digital ? ' · Digital' : ''}</p>
   <p class="price">

@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Catalog from '../../components/Catalog.astro';
+import RefreshSplash from '../../components/RefreshSplash.astro';
 import CatIcon from '../../components/CatIcon.astro';
-import { allProducts, allCategoryNodes, categoryById, etsyForCategory, productInCategory } from '../../lib/site';
+import { allProducts, allCategoryNodes, categoryById, ebayForCategory, etsyForCategory, productInCategory } from '../../lib/site';
 
 export function getStaticPaths() {
   return allCategoryNodes()
@@ -15,10 +16,12 @@ const category = categoryById(categoryId || '');
 if (!category || category.kind === 'link') return Astro.redirect('/shop');
 const products = (await allProducts()).filter((product) => productInCategory(product, category));
 const designs = etsyForCategory(category);
+const ebay = ebayForCategory(category);
 const brands = [...new Set(products.map((product) => product.data.brand).filter(Boolean))].sort();
 const specs = [...new Set(products.flatMap((product) => product.data.specs.map((spec) => `${spec.name}=${spec.value}`)))].sort();
 ---
 <BaseLayout title={category.label} description={category.blurb} path={`/shop/${category.id}`} tone={category.tone}>
+  {category.tone === 'tech' && <RefreshSplash />}
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <a href="/shop">Shop</a> <span>{category.label}</span></nav>
     <p class="eyebrow"><CatIcon name={category.icon} /> {category.tone === 'tech' ? 'Tech' : 'Style'}</p>
@@ -31,6 +34,6 @@ const specs = [...new Set(products.flatMap((product) => product.data.specs.map((
         ))}
       </div>
     )}
-    {products.length || designs.length ? <Catalog products={products} designs={designs} brands={brands} specs={specs} /> : <p class="empty">Nothing is listed in {category.label} yet.</p>}
+    {products.length || designs.length || ebay.length ? <Catalog products={products} designs={designs} ebay={ebay} brands={brands} specs={specs} /> : <p class="empty">Nothing is listed in {category.label} yet.</p>}
   </div>
 </BaseLayout>

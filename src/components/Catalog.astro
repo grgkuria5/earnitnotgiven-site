@@ -2,10 +2,12 @@
 import Filters from './Filters.astro';
 import ProductCard from './ProductCard.astro';
 import EtsyCards from './EtsyCards.astro';
-import type { EtsyDesign, ProductEntry } from '../lib/site';
-const { products, designs = [], showQuery = false, brands = [], specs = [] } = Astro.props as {
+import EbayCards from './EbayCards.astro';
+import type { EbayListing, EtsyDesign, ProductEntry } from '../lib/site';
+const { products, designs = [], ebay = [], showQuery = false, brands = [], specs = [] } = Astro.props as {
   products: ProductEntry[];
   designs?: EtsyDesign[];
+  ebay?: EbayListing[];
   showQuery?: boolean;
   brands?: string[];
   specs?: string[];
@@ -19,6 +21,7 @@ const { products, designs = [], showQuery = false, brands = [], specs = [] } = A
       <div class="grid cards" data-grid>
         {products.map((product) => <ProductCard product={product} />)}
         <EtsyCards designs={designs} />
+        <EbayCards items={ebay} />
       </div>
       <p class="empty" data-empty hidden>Nothing matches those filters.</p>
     </div>

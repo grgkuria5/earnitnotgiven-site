@@ -8,6 +8,7 @@ sale_price: 399
 quantity: 1
 featured: true
 sample: true
+refreshed_tested: true
 sku: SAMPLE-LAP-14
 brand: SampleBrand
 summary: Placeholder laptop so the product page, sale price, and Amazon button can be reviewed. Not for sale.

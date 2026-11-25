@@ -4,12 +4,22 @@ import {
   answerChat,
   buildCsp,
   escapeHtml,
+  hexColor,
   looksSensitive,
   paypalLines,
   publicHttpsUrl,
   renderRichText,
+  shiftSeconds,
   stripeLink,
 } from './pure.ts';
+
+test('shift settings stay in range', () => {
+  assert.equal(shiftSeconds(8), 12);
+  assert.equal(shiftSeconds(24), 20);
+  assert.equal(shiftSeconds('16'), 16);
+  assert.equal(hexColor('#1c3f73', '#000000'), '#1c3f73');
+  assert.equal(hexColor('red', '#e0b45a'), '#e0b45a');
+});
 
 test('escapes markup', () => {
   assert.equal(escapeHtml('<script>"x"'), '&lt;script&gt;&quot;x&quot;');

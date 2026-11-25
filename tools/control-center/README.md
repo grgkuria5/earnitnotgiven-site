@@ -47,6 +47,34 @@ After a real purchase, `scripts/print-label.ps1` prints the 4x6 label to the Win
 
 Sample slips are at http://127.0.0.1:8765/packing-slip/sample
 
+## Snap & List
+
+This is the phone-to-listing pipeline for resale electronics. It runs on the AIDesktop. A phone on the same LAN, or on your Tailscale network, opens `http://<that-address>:8765/snap`. The page is a home-screen app: in the phone browser, use Add to Home Screen. The camera button uses the phone camera. Nothing on that page publishes a listing.
+
+`start.bat` listens on all interfaces (`CONTROL_BIND=0.0.0.0`) so the phone can connect. Requests from public internet addresses are refused. Loopback, private LAN, and Tailscale `100.x` addresses are allowed.
+
+Photos also land in `C:\Users\Hacking\EarnItNotGiven\Products\_inbox` if you point iCloud, OneDrive, or Syncthing there. The next time you open Snap & List, those files move into `Products\<SKU>\photos`. HEIC becomes JPG when Pillow and pillow-heif are installed (`py -3 -m pip install pillow pillow-heif`). If they are not installed, the original file is kept and the log says so.
+
+The first photo starts identification. If Ollama has a vision model installed (`ollama pull llava` or `llama3.2-vision`), that model reads the photo. If it does not, the note you typed is kept and specs are not guessed. Spec Checker can still open the maker page from a service tag.
+
+There is no eBay developer account. A price check opens the public sold-listings search and does not invent a price. Approve on a snap draft writes a site file and a ready-to-paste eBay text file for seller **workhard1140**. It does not publish or end an eBay listing.
+
+## Electronics copied from eBay
+
+`tools/ebay-import/import_ebay.py` reads the public seller page for workhard1140 only. It uses no login and no API key, and it waits between requests. Sold or ended listings drop off because the file is replaced with what is still active. A captcha or a block leaves the previous file alone.
+
+Buy now is on by default. The card shows the item price, the flat shipping rate, and the total before the button. PayPal is charged the item amount plus that shipping amount. A Stripe Payment Link is optional and stays hidden until you paste one in the content manager. Also on eBay is the second link. The eBay listing stays posted.
+
+When a site sale is recorded, the item becomes pending, Buy now turns off, a Shipping Station order is saved, and you get an ntfy message or an email draft that says to end the eBay listing yourself. The message includes the item link. Nothing in this program ends or edits the eBay listing.
+
+Refresh eBay listings is a button in Snap & List. Payment received records a sale for an item id after you see it in PayPal. `schedule-ebay.ps1` can create a disabled daily task that only refreshes the file.
+
+Notifications go to your ntfy topic (`NTFY_TOPIC`, server `NTFY_SERVER`) or a Home Assistant webhook (`HA_NOTIFY_URL`). The message has Looks good, continue and Skip. If neither is set, an email draft to gkuria175@gmail.com is saved and is not sent.
+
+Continue cleans the photos (EXIF rotation, a plain-edge crop, a light resize). It does not remove scratches or hide wear. Ollama then drafts the title and description from your notes, or your notes are kept if Ollama is off. The site file is written with `draft: true` and `refreshed_tested: true`. An eBay paste file is saved under `drafts/`. You get a preview link. Approve publishes the site file (`draft: false`) and, when an unpublished offer exists, publishes that offer. Sample rows never publish.
+
+Every step is appended to `data/pipeline-log.jsonl`.
+
 ## Daily task
 
 `schedule-daily.ps1` does nothing until you run:

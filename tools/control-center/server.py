@@ -84,6 +84,13 @@ def load_env() -> dict[str, str]:
         "STRIPE_SECRET_KEY",
         "PAYPAL_CLIENT_ID",
         "PAYPAL_CLIENT_SECRET",
+        "CONTROL_BIND",
+        "PRODUCTS_ROOT",
+        "NTFY_TOPIC",
+        "NTFY_SERVER",
+        "HA_NOTIFY_URL",
+        "HA_TOKEN",
+        "SNAP_BASE",
     ):
         if os.environ.get(key):
             env[key] = os.environ[key]
@@ -91,6 +98,14 @@ def load_env() -> dict[str, str]:
     env.setdefault("ETSY_REDIRECT_URI", f"http://{HOST}:{PORT}/callback")
     env.setdefault("GITHUB_REPO", "grgkuria5/earnitnotgiven-site")
     return env
+
+
+def client_is_private(address: str) -> bool:
+    try:
+        ip = ipaddress.ip_address(address)
+    except ValueError:
+        return False
+    return bool(ip.is_private or ip.is_loopback or ip in ipaddress.ip_network("100.64.0.0/10"))
 
 
 def host_allowed(url: str) -> bool:
@@ -408,6 +423,7 @@ PAGE = """<!doctype html>
       <button class="ghost" type="button" data-tab="sales">Sales</button>
       <button class="ghost" type="button" data-tab="labels">Shipping Station</button>
       <button class="ghost" type="button" data-tab="spec">Spec Checker</button>
+      <button class="ghost" type="button" data-tab="snap">Snap & List</button>
     </nav>
     <section id="panel" class="grid"></section>
   </main>
@@ -422,12 +438,13 @@ PAGE = """<!doctype html>
       guides: `<form data-tool="guide" class="card"><h2>Guide draft</h2><input name="topic" placeholder="Topic" /><button class="gold" type="submit">Draft a guide</button></form>`,
       ship: `<div class="card"><h2>Ship checklist and low stock</h2><div id="stock"></div><form data-tool="checklist"><button class="gold" type="submit">Draft the checklist</button></form></div>`,
       sync: `<form data-tool="sync" class="card"><h2>Description sync suggestions</h2><textarea name="notes" rows="5" placeholder="Paste an Etsy description and the site description"></textarea><button class="gold" type="submit">Draft suggestions</button></form>`,
+      snap: `<div class="card"><h2>Snap & List</h2><p class="muted">Phone upload is at <a href="/snap">/snap</a>. Add it to the home screen. The sample row is not a real device and cannot publish.</p><div id="snap-list"></div><p><a class="link" href="/snap/notice/SAMPLE?token=sample">Sample price notification</a> <a class="link" href="/snap/preview/SAMPLE?token=sample">Sample approval preview</a></p><form id="ebay-refresh"><h3>Refresh eBay listings</h3><p class="muted">Reads the public workhard1140 list. It does not end or edit those listings.</p><button class="gold" type="submit">Refresh eBay listings</button><p id="ebay-note" class="muted"></p></form><form id="ebay-sale"><h3>Mark a site sale pending</h3><input name="item_id" placeholder="eBay item id" /><button class="ghost" type="submit">Payment received</button></form></div>`,
       spec: `<div class="card"><h2>Spec Checker</h2><p class="muted">Opens the maker’s own page. It does not scrape it. WMI, OCR, and the iPhone copy run on this PC only.</p><label>Lookup<select id="spec-provider">${specProviders.map(p => `<option value="${p.id}">${p.group}: ${p.label}</option>`).join("")}</select></label><label>Tag, serial, model, IMEI, UPC, or photo path<input id="spec-id" value="SAMPLE7X" /></label><p><button class="gold" type="button" id="spec-go">Open official page</button> <button class="ghost" type="button" id="spec-wmi">Read this PC (WMI)</button> <button class="ghost" type="button" id="spec-ocr">Read a label photo</button> <button class="ghost" type="button" id="spec-phone">Import iPhone photos</button> <button class="ghost" type="button" id="spec-upc">Look up UPC</button></p><pre id="spec-out" class="muted">SAMPLE suggestion for Dell: category computers / laptops. Support URL is Dell’s service-tag page.</pre></div>`,
       labels: `<div class="card sample"><h2>Shipping Station</h2><p class="banner">SAMPLE DATA. Buy label will not purchase anything.</p><p>Order SAMPLE-1001 · Sample Buyer · Palo Alto, CA · customer paid shipping</p><p>Parcel preset: 8 oz, 10 x 8 x 1 in</p><table><tr><th>Carrier</th><th>Service</th><th>Rate</th></tr><tr><td>USPS</td><td>Ground Advantage</td><td>$6.40</td></tr><tr><td>UPS</td><td>Ground</td><td>$9.15</td></tr></table><p><a class="link" href="/packing-slip/sample" target="_blank">Open sample packing slip</a></p><form id="buy-form"><input type="hidden" name="rate_id" value="SAMPLE-USPS" /><button class="gold" type="submit">Buy label</button></form><p id="buy-note" class="muted">One click buys a real label only when a carrier key is set and the rate is under your caps. Auto-buy is off.</p></div>`,
       sales: `<div class="card sample"><h2>Sales</h2><p class="banner">SAMPLE DATA — not your shop. Connect Etsy to replace it.</p><p><a class="link" href="/auth/start">Connect Etsy</a> <a class="link" href="/export.csv">Export CSV</a></p><table><thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead><tbody>${sampleOrders.map(row => `<tr><td>${row.id}<br>${row.title}</td><td>${row.status}</td><td>$${row.total.toFixed(2)}</td></tr>`).join("")}</tbody></table><form id="ship-form"><h3>Mark shipped</h3><input name="receipt_id" value="SAMPLE-1001" /><input name="carrier" value="usps" /><input name="tracking" placeholder="Tracking number" /><label><input type="checkbox" name="confirm" value="yes" /> I mean to send this to Etsy</label><button class="gold" type="submit">Submit tracking</button><p id="ship-note" class="muted"></p></form><form id="manual"><h3>Log a site order</h3><input name="title" placeholder="Title" /><input name="total" placeholder="Total" /><button class="ghost" type="submit">Save locally</button></form></div>`
     };
     const panel = document.querySelector("#panel");
-    function show(name) { panel.innerHTML = tabs[name]; bind(); if (name === "ship") loadStock(); }
+    function show(name) { panel.innerHTML = tabs[name]; bind(); if (name === "ship") loadStock(); if (name === "snap") loadSnap(); }
     document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click", () => show(btn.dataset.tab)));
     function bind() {
       panel.querySelectorAll("form[data-tool]").forEach(form => form.addEventListener("submit", async (event) => {
@@ -455,6 +472,21 @@ PAGE = """<!doctype html>
       if (specOcr) specOcr.addEventListener("click", () => specCall("/api/spec/ocr", {path: document.querySelector("#spec-id").value}));
       const specPhone = document.querySelector("#spec-phone");
       if (specPhone) specPhone.addEventListener("click", () => specCall("/api/spec/iphone", {tag: document.querySelector("#spec-id").value}));
+      const ebayRefresh = document.querySelector("#ebay-refresh");
+      if (ebayRefresh) ebayRefresh.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const res = await fetch("/api/ebay/refresh", {method:"POST", headers:{"content-type":"application/json"}, body:"{}"});
+        const body = await res.json();
+        document.querySelector("#ebay-note").textContent = body.message || body.error;
+      });
+      const ebaySale = document.querySelector("#ebay-sale");
+      if (ebaySale) ebaySale.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const data = Object.fromEntries(new FormData(ebaySale).entries());
+        const res = await fetch("/api/ebay/sale", {method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(data)});
+        const body = await res.json();
+        document.querySelector("#ebay-note").textContent = body.message || body.error;
+      });
       const specUpc = document.querySelector("#spec-upc");
       if (specUpc) specUpc.addEventListener("click", () => specCall("/api/spec/upc", {code: document.querySelector("#spec-id").value}));
       const buy = document.querySelector("#buy-form");
@@ -472,6 +504,12 @@ PAGE = """<!doctype html>
         const body = await res.json();
         document.querySelector("#ship-note").textContent = body.message || body.error;
       });
+    }
+    async function loadSnap() {
+      const res = await fetch("/api/snap/items");
+      const body = await res.json();
+      const rows = (body.items || []).map(row => `<tr><td>${row.sku}</td><td>${row.stage}</td><td>${row.title || ""}</td></tr>`).join("");
+      document.querySelector("#snap-list").innerHTML = `<table><thead><tr><th>SKU</th><th>Stage</th><th>Title</th></tr></thead><tbody>${rows}</tbody></table>`;
     }
     async function loadStock() {
       const res = await fetch("/api/stock");
@@ -566,8 +604,12 @@ APP = App()
 
 class Handler(BaseHTTPRequestHandler):
     def _host_ok(self) -> bool:
-        host = (self.headers.get("host") or "").split(":")[0]
-        return host in {"127.0.0.1", "localhost"}
+        if not client_is_private(self.client_address[0]):
+            return False
+        host = (self.headers.get("host") or "").split(":")[0].strip("[]")
+        if host in {"127.0.0.1", "localhost", "::1"}:
+            return True
+        return host_allowed(f"http://{host}")
 
     def _send(self, code: int, body: bytes, content_type: str) -> None:
         self.send_response(code)
@@ -664,20 +706,103 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("location", "/")
             self.end_headers()
             return
+        if path == "/snap" or path.startswith("/snap/"):
+            self._snap_get(path)
+            return
+        if path == "/api/snap/items":
+            from pipeline import public_items, scan_inbox
+            scan_inbox(APP.env)
+            self._json(200, {"items": public_items()})
+            return
         self._json(404, {"error": "not found"})
+
+    def _snap_get(self, path: str) -> None:
+        from pipeline import SAMPLE_ITEM, apply_action, find_item, notice_page, preview_page, snap_page
+        base = APP.env.get("SNAP_BASE") or f"http://{self.headers.get('host')}"
+        if path == "/snap":
+            self._send(200, snap_page(base).encode(), "text/html; charset=utf-8")
+            return
+        if path == "/snap/manifest.webmanifest":
+            body = json.dumps({
+                "name": "Snap & List",
+                "short_name": "Snap",
+                "start_url": "/snap",
+                "display": "standalone",
+                "background_color": "#100e0b",
+                "theme_color": "#14110c",
+            }).encode()
+            self._send(200, body, "application/manifest+json")
+            return
+        if path == "/snap/sw.js":
+            script = "self.addEventListener('install', (event) => event.waitUntil(caches.open('snap-1').then((cache) => cache.add('/snap')))); self.addEventListener('fetch', (event) => { if (event.request.method !== 'GET') return; event.respondWith(fetch(event.request).catch(() => caches.match(event.request))); });"
+            self._send(200, script.encode(), "text/javascript; charset=utf-8")
+            return
+        query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        token = query.get("token", [""])[0]
+        if path.startswith("/snap/notice/") or path.startswith("/snap/preview/"):
+            from pipeline import token_matches
+            item = find_item(path.rsplit("/", 1)[-1])
+            if not item or not token_matches(item, token):
+                self._json(404, {"error": "not found"})
+                return
+            page = notice_page(item) if "/notice/" in path else preview_page(item)
+            self._send(200, page.encode(), "text/html; charset=utf-8")
+            return
+        if path.startswith("/snap/continue/") or path.startswith("/snap/skip/"):
+            action = "continue" if "/continue/" in path else "skip"
+            result = apply_action(path.rsplit("/", 1)[-1], token, action)
+            if result.get("message") == "continue":
+                result = self._finish_snap(result["item"])
+            self._send(200, f"<p>{result.get('message')}</p>".encode(), "text/html; charset=utf-8")
+            return
+        self._json(404, {"error": "not found"})
+
+    def _finish_snap(self, item: dict) -> dict:
+        from pipeline import finish_draft, send_notify
+        text = item.get("note") or ""
+        try:
+            names = list_models(APP.env)
+            model = next((name for name in names if any(token in name.lower() for token in ("llava", "vision"))), "")
+            if model:
+                text = generate(APP.env, model, "Draft an honest resale title and description from these notes. Do not hide defects. Do not invent specs that are not in the notes.\n" + text)
+        except Exception:
+            text = text or "Ollama is offline. Specs were not guessed."
+        item = finish_draft(APP.env, item, text)
+        base = APP.env.get("SNAP_BASE") or f"http://{self.headers.get('host')}"
+        note = send_notify(APP.env, item, base)
+        return {"message": f"Draft saved. Not published. {note} Preview: {base}/snap/preview/{item.get('id')}?token={item.get('token')}"}
 
     def do_POST(self):  # noqa: N802
         if not self._host_ok():
             self._json(403, {"error": "localhost only"})
             return
         length = int(self.headers.get("content-length") or "0")
-        raw = self.rfile.read(length) if length else b"{}"
+        raw = self.rfile.read(length) if length else b""
+        path = urllib.parse.urlparse(self.path).path
+        if path == "/snap/upload" or path.startswith("/snap/approve/"):
+            self._snap_post(path, raw, self.headers.get("content-type") or "")
+            return
         try:
             payload = json.loads(raw.decode() or "{}")
         except json.JSONDecodeError:
             self._json(400, {"error": "bad json"})
             return
-        path = urllib.parse.urlparse(self.path).path
+        if path == "/api/ebay/refresh":
+            import subprocess
+            script = REPO / "tools" / "ebay-import" / "import_ebay.py"
+            result = subprocess.run([sys.executable, str(script)], cwd=REPO, capture_output=True, text=True, timeout=90)
+            text = (result.stdout or result.stderr or "No output.").strip()
+            self._json(200 if result.returncode == 0 else 502, {"message": text[-500:]})
+            return
+        if path == "/api/ebay/sale":
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("record_sale", REPO / "tools" / "ebay-import" / "record_sale.py")
+            mod = importlib.util.module_from_spec(spec)
+            assert spec and spec.loader
+            spec.loader.exec_module(mod)
+            outcome = mod.record_site_sale(str(payload.get("item_id") or ""), APP.env)
+            self._json(200, outcome)
+            return
         if path == "/api/run":
             result = APP.run_tool(payload)
             self._json(200 if "message" in result else 503, result)
@@ -822,6 +947,46 @@ class Handler(BaseHTTPRequestHandler):
             return
         self._json(404, {"error": "not found"})
 
+    def _snap_post(self, path: str, raw: bytes, content_type: str) -> None:
+        from email.parser import BytesParser
+        from email.policy import default
+        from pipeline import find_item, publish_local, send_notify, start_item, token_matches
+        if path == "/snap/upload":
+            header = f"Content-Type: {content_type}\r\nMIME-Version: 1.0\r\n\r\n".encode()
+            message = BytesParser(policy=default).parsebytes(header + raw)
+            note = ""
+            files = []
+            if message.is_multipart():
+                for part in message.iter_parts():
+                    filename = part.get_filename()
+                    payload = part.get_payload(decode=True) or b""
+                    if filename:
+                        files.append((filename, payload))
+                    elif part.get_param("name", header="content-disposition") == "note":
+                        note = payload.decode("utf-8", "replace").strip()
+            result = start_item(APP.env, note, files)
+            if not result.get("ok"):
+                self._send(400, str(result.get("message")).encode(), "text/html; charset=utf-8")
+                return
+            item = result["item"]
+            base = APP.env.get("SNAP_BASE") or f"http://{self.headers.get('host')}"
+            send_notify(APP.env, item, base)
+            from pipeline import notice_page
+            self._send(200, notice_page(item).encode(), "text/html; charset=utf-8")
+            return
+        item_id = path.rsplit("/", 1)[-1]
+        token = urllib.parse.parse_qs(raw.decode("utf-8", "replace")).get("token", [""])[0]
+        item = find_item(item_id)
+        if not item or not token_matches(item, token):
+            self._json(404, {"error": "not found"})
+            return
+        if item.get("sample"):
+            self._send(200, b"<p>Sample was not published and was not sent to eBay.</p>", "text/html; charset=utf-8")
+            return
+        message = publish_local(item)
+        message += " The eBay text is a paste draft only. This program did not publish or end an eBay listing."
+        self._send(200, message.encode(), "text/html; charset=utf-8")
+
     def log_message(self, fmt: str, *args) -> None:
         sys.stderr.write("%s\n" % (fmt % args))
 
@@ -845,6 +1010,25 @@ def self_check() -> int:
     assert not host_allowed("https://example.com")
     assert not host_allowed("http://8.8.8.8")
     assert host_allowed("http://100.64.0.2:11434")
+    assert client_is_private("192.168.1.20")
+    assert client_is_private("100.64.1.4")
+    assert not client_is_private("8.8.8.8")
+    from pipeline import SELLER, apply_action, median_price, sold_search_url
+    assert SELLER == "workhard1140"
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("record_sale", REPO / "tools" / "ebay-import" / "record_sale.py")
+    sale = importlib.util.module_from_spec(spec)
+    assert spec and spec.loader
+    spec.loader.exec_module(sale)
+    note = sale.reminder_text({"url": "https://www.ebay.com/itm/123456789012", "item_id": "123456789012"})
+    assert "End this listing on eBay to avoid double-selling" in note
+    assert "did not end or edit" in note
+    marked = sale.mark_pending({"products": [{"item_id": "1", "status": "active", "buy_direct": True}]}, "1")
+    assert marked["status"] == "pending" and marked["buy_direct"] is False
+    assert median_price([10, 30, 20]) == 20
+    assert "LH_Sold=1" in sold_search_url("dell laptop")
+    skipped = apply_action("SAMPLE", "sample", "skip")
+    assert skipped["ok"] is False and "eBay" in skipped["message"]
     assert redirect_ok("http://127.0.0.1:8765/callback")
     assert not redirect_ok("https://evil.example/callback")
     verifier, challenge = pkce_pair()
@@ -875,8 +1059,11 @@ def main() -> int:
     if not redirect_ok(load_env().get("ETSY_REDIRECT_URI", f"http://{HOST}:{PORT}/callback")):
         print("ETSY_REDIRECT_URI must stay on localhost.", file=sys.stderr)
         return 1
-    server = ThreadingHTTPServer((HOST, PORT), Handler)
-    print(f"Control Center at http://{HOST}:{PORT}  (this computer only)")
+    bind = load_env().get("CONTROL_BIND", "127.0.0.1")
+    if bind not in {"127.0.0.1", "0.0.0.0"}:
+        bind = "127.0.0.1"
+    server = ThreadingHTTPServer((bind, PORT), Handler)
+    print(f"Control Center at http://{bind}:{PORT}  (loopback, private LAN, or Tailscale only)")
     server.serve_forever()
     return 0
 

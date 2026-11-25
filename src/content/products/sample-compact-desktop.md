@@ -6,6 +6,7 @@ condition: Used - Good
 price: 275
 quantity: 1
 sample: true
+refreshed_tested: true
 sku: SAMPLE-DT-01
 brand: SampleBrand
 summary: Placeholder desktop. Not for sale.

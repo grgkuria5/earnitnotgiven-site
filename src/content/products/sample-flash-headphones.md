@@ -11,6 +11,7 @@ flash_qty_limit: 3
 quantity: 1
 featured: true
 sample: true
+refreshed_tested: true
 sku: SAMPLE-FLASH-HP
 brand: SampleBrand
 summary: Placeholder flash deal so the countdown, percent-off badge, and deal price can be reviewed. Not for sale.

@@ -1,0 +1,45 @@
+---
+import { money, paypalReady } from '../lib/pure';
+import { settings, SITE, type EbayListing } from '../lib/site';
+import SellerRibbon from './SellerRibbon.astro';
+const { items } = Astro.props as { items: EbayListing[] };
+const paypal = paypalReady(settings.paypal_business_email);
+---
+{items.map((item) => (
+  <article class="card" data-item data-title={item.title} data-price={item.total ?? item.price ?? 0} data-condition={item.condition} data-type="physical" data-search={item.title.toLowerCase()}>
+    <a href={item.url} rel="noopener noreferrer" target="_blank">
+      {item.image ? <img src={item.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+    </a>
+    {item.refreshed && item.status === 'active' && <SellerRibbon />}
+    <h3><a href={item.url} rel="noopener noreferrer" target="_blank">{item.title}</a></h3>
+    <p class="meta muted">Electronics · eBay seller workhard1140 · {item.condition}</p>
+    {item.status !== 'active' && <p class="notice">Sale pending on this site. The eBay listing may still be open until it is ended there.</p>}
+    {item.price !== null && (
+      <p class="price">
+        <span>{money(item.price)}</span>
+        <span class="muted"> + {money(item.shipping)} shipping</span>
+      </p>
+    )}
+    {item.total !== null && <p class="meta">Total before checkout {money(item.total)}</p>}
+    {item.shippingNote && <p class="muted">{item.shippingNote}</p>}
+    {item.buyDirect && paypal && item.total !== null && (
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_xclick" />
+        <input type="hidden" name="business" value={settings.paypal_business_email} />
+        <input type="hidden" name="item_name" value={item.title} />
+        <input type="hidden" name="item_number" value={item.id} />
+        <input type="hidden" name="custom" value={item.id} />
+        <input type="hidden" name="amount" value={item.price!.toFixed(2)} />
+        <input type="hidden" name="shipping" value={item.shipping.toFixed(2)} />
+        <input type="hidden" name="currency_code" value="USD" />
+        <input type="hidden" name="no_shipping" value="2" />
+        <input type="hidden" name="charset" value="utf-8" />
+        <input type="hidden" name="return" value={`${SITE}/order/thanks/`} />
+        <button class="btn btn-gold" type="submit">Buy now</button>
+      </form>
+    )}
+    {item.buyDirect && !paypal && <p class="muted">Buy now turns on when the PayPal business email is saved. Shipping shown above is the rate for this item.</p>}
+    {item.stripe && <p><a class="btn btn-ghost" href={item.stripe} rel="noopener noreferrer" target="_blank">Pay with card (Stripe)</a></p>}
+    <p class="meta"><a href={item.url} rel="noopener noreferrer" target="_blank">Also on eBay</a></p>
+  </article>
+))}

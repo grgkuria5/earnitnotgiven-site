@@ -1,0 +1,16 @@
+{
+  "default": 12,
+  "laptops": 15,
+  "desktops": 25,
+  "all-in-ones": 28,
+  "monitors": 18,
+  "servers": 35,
+  "gpus": 10,
+  "printers": 18,
+  "phones": 8,
+  "iphone": 8,
+  "android": 8,
+  "tablets": 10,
+  "networking": 12,
+  "accessories": 8
+}

@@ -8,6 +8,7 @@ sale_price: 199
 quantity: 1
 featured: true
 sample: true
+refreshed_tested: true
 sku: SAMPLE-PH-128
 brand: SampleBrand
 summary: Placeholder phone. Not for sale.
