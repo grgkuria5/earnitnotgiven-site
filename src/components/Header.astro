@@ -37,6 +37,23 @@ const menu = visibleCategories();
   <div class="wrap nav-panel" id="site-nav">
     <nav class="nav-row" aria-label="Primary">
       <a href="/shop" aria-current={shopCurrent}>Shop</a>
+      <details class="cat-menu" data-cat-menu>
+        <summary>Shop by category</summary>
+        <div class="cat-menu-panel">
+          {menu.map((category) => (
+            <div class={`cat-menu-group tone-${category.tone}`}>
+              <a class="cat-menu-parent" href={category.href} aria-current={path === category.href ? 'page' : undefined}>{category.label}</a>
+              {category.children.filter((child) => !child.hidden).length > 0 && (
+                <div class="cat-menu-kids">
+                  {category.children.filter((child) => !child.hidden).map((child) => (
+                    <a href={child.href} aria-current={path === child.href ? 'page' : undefined}><CatIcon name={child.icon} /> {child.label}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </details>
       <a href="/deals" aria-current={current('/deals')}>Deals</a>
       <a href="/designs" aria-current={current('/designs')}>Designs</a>
       <a href="/guides" aria-current={current('/guides')}>Guides</a>
@@ -45,20 +62,6 @@ const menu = visibleCategories();
         <a href="/ewaste-pickup" aria-current={current('/ewaste-pickup')}>E-Waste Pickup</a>
       </span>
       <a href="/about" aria-current={current('/about')}>About</a>
-      <div class="mega-bar">
-        {menu.map((category) => (
-          <div class={`mega tone-${category.tone}`}>
-            <a href={category.href} aria-current={path === category.href ? 'page' : undefined}>{category.label}</a>
-            {category.children.filter((child) => !child.hidden).length > 0 && (
-              <div class="mega-panel">
-                {category.children.filter((child) => !child.hidden).map((child) => (
-                  <a href={child.href}><CatIcon name={child.icon} /> {child.label}</a>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
     </nav>
   </div>
 </header>

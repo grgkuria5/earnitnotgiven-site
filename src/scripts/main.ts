@@ -33,9 +33,21 @@ function writeCart(lines: CartLine[]) {
 function initNav() {
   const button = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const panel = document.querySelector<HTMLElement>('#site-nav');
+  const catMenu = document.querySelector<HTMLDetailsElement>('[data-cat-menu]');
   button?.addEventListener('click', () => {
     const open = panel?.classList.toggle('open');
     button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (!open && catMenu) catMenu.open = false;
+  });
+  document.addEventListener('click', (event) => {
+    if (!catMenu?.open) return;
+    if (event.target instanceof Node && catMenu.contains(event.target)) return;
+    catMenu.open = false;
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !catMenu?.open) return;
+    catMenu.open = false;
+    catMenu.querySelector('summary')?.focus();
   });
 }
 
