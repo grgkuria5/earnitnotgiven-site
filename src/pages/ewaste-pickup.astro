@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { settings } from '../lib/site';
+
+const live = settings.ewaste_launch_mode === 'live';
+const partner = settings.ewaste_partner_name;
+const phone = settings.ewaste_phone;
+const response = settings.ewaste_response_time;
+const year = settings.ewaste_year;
+const email = settings.contact_email;
+const success = live
+  ? `Thanks, {name}! We got your request and will contact you${response ? ` within ${response}` : ''} to confirm your pickup window.`
+  : "You're on the list. We'll email you as soon as pickups begin in your city.";
+const error = `Something went wrong. Please try again or email ${email}.`;
+---
+<BaseLayout
+  title="Free E-Waste Pickup in Palo Alto, Mountain View, Redwood City & San Jose | Earn It Not Given"
+  description="Free pickup of old computers, laptops, TVs, phones and other electronics from homes and businesses in Palo Alto, Mountain View, Redwood City and San Jose. Secure data wiping. Request a pickup online."
+  path="/ewaste-pickup"
+  tone="tech"
+>
+  <div class="wrap section prose">
+    <p class="eyebrow">Palo Alto area</p>
+    <h1>Free E-Waste Pickup — Palo Alto, Mountain View, Redwood City &amp; San José</h1>
+    <p class="lede"><strong>We pick up your old electronics for free, wipe your data, and keep them out of the landfill.</strong></p>
+    <p>Clearing out a garage, closing an office, or upgrading your laptops? Tell us what you have and when you're free. We come to your door, haul it away, and securely erase any data. Working equipment gets a second life; everything else goes to authorized California e-waste recyclers.</p>
+    {live ? (
+      <p><a class="btn btn-gold" href="#pickup-form">Request a free pickup</a></p>
+    ) : (
+      <>
+        <p class="notice">Pickups start soon. Join the waitlist and we will email you when we begin in your city.</p>
+        <p><a class="btn btn-gold" href="#pickup-form">Join the pickup waitlist</a></p>
+      </>
+    )}
+
+    <h2>Where we pick up</h2>
+    <p>We currently serve homes and businesses in:</p>
+    <ul>
+      <li><strong>Palo Alto</strong></li>
+      <li><strong>Mountain View</strong></li>
+      <li><strong>Redwood City</strong></li>
+      <li><strong>San José</strong></li>
+    </ul>
+    <p>Not in these cities? Send a request anyway — we'll let you know if we can reach you.</p>
+
+    <h2>What we take</h2>
+    <h3>Yes, we take</h3>
+    <ul>
+      <li>Laptops, desktop computers, and tablets</li>
+      <li>Flat-panel TVs and computer monitors (LCD/LED/OLED/plasma) — please keep screens intact</li>
+      <li>Cell phones, smartphones, and landline phones</li>
+      <li>Printers, scanners, and copiers (small office size)</li>
+      <li>Keyboards, mice, webcams, speakers, headphones, and other computer accessories</li>
+      <li>Routers, modems, switches, and other networking gear</li>
+      <li>Game consoles, streaming boxes, DVD/Blu-ray players, stereos, radios</li>
+      <li>Cameras, e-readers, smart-home devices, and small plug-in or battery electronics</li>
+      <li>Cables, chargers, and power supplies</li>
+      <li>Hard drives, SSDs, USB drives, and memory cards (we wipe them — see our data promise)</li>
+    </ul>
+    <h3>Only by arrangement (message us first)</h3>
+    <ul>
+      <li><strong>Large business lots</strong> (e.g., 20+ items, whole-office cleanouts, server racks) — we may schedule a special visit and ask for your company contact details</li>
+      <li>Heavy or hard-to-move items (large printers/copiers, rack equipment, large screens)</li>
+      <li>Items with <strong>cracked or leaking screens</strong> or visible damage</li>
+      <li>Microwaves, small appliances without refrigerant, and other items you're unsure about — send a photo</li>
+      <li>Equipment from healthcare, school, or government settings that holds regulated data</li>
+    </ul>
+    <h3>No, we can't take</h3>
+    <ul>
+      <li><strong>CRT (tube) TVs and monitors</strong> — not accepted at this time</li>
+      <li><strong>Appliances with refrigerant</strong> (refrigerators, freezers, air conditioners, dehumidifiers)</li>
+      <li><strong>Loose, damaged, swollen, leaking, or overheating batteries</strong> of any type (if a battery is swollen, keep the device in a cool place away from anything flammable and contact your local household hazardous waste program)</li>
+      <li><strong>Large batteries and battery packs</strong>: car/lead-acid batteries, e-bike/e-scooter/EV batteries, and home energy-storage batteries</li>
+      <li><strong>Smoke detectors</strong> and other items with radioactive sources</li>
+      <li><strong>Hazardous materials &amp; chemicals</strong> (paint, solvents, fuel, pesticides, pool chemicals, mercury items, fluorescent bulbs, ballasts)</li>
+      <li><strong>Vapes/e-cigarettes</strong>, fireworks, ammunition, or medical waste</li>
+      <li>Solar panels, lab/medical imaging equipment, and anything containing biohazards</li>
+      <li>Trash, furniture, and general junk</li>
+    </ul>
+    <p><em>Not sure? Upload a photo in the request form and we'll tell you.</em></p>
+
+    <h2>Our data-destruction promise</h2>
+    <p>We take your privacy seriously.</p>
+    <ul>
+      <li><strong>Every storage device we receive for reuse is wiped</strong> (computers, phones, tablets, drives, memory cards) using methods aligned with <strong>NIST SP 800-88 Rev. 2</strong> (the U.S. government's media-sanitization guideline) — "Clear" or "Purge," whichever suits the device type.</li>
+      <li>
+        <strong>Devices we can't wipe</strong> (damaged or failed drives) are <strong>held securely and sent to a professional data-destruction partner</strong> for physical destruction.
+        {partner && <> Partner: {partner}.</>}
+      </li>
+      <li><strong>Certificate on request:</strong> ask when you book and we'll email a <strong>Certificate of Data Sanitization</strong> listing each device (serial number or IMEI), the method used, the date, and who performed it.</li>
+      <li><strong>We do not read, copy, or keep your files.</strong> Your data is erased, not browsed.</li>
+      <li><strong>Your part:</strong> back up anything you want to keep, sign out of accounts, remove SIM and memory cards, and turn off <strong>Find My / Activation Lock</strong> on Apple and Android devices (otherwise we can't reset them).</li>
+    </ul>
+    <p><em>We follow recognized wiping guidelines, but we are not currently certified to a third-party data-destruction standard such as R2, e-Stewards, or NAID. If your policy requires certified destruction, tell us and we'll arrange it through a certified partner.</em></p>
+    {live && (
+      <p><em>{settings.business_name} has notified the California Department of Toxic Substances Control as an e-waste collector. Collected e-waste is handled under California universal-waste rules and sent to authorized recyclers.</em></p>
+    )}
+
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>{live ? 'Request a pickup.' : 'Join the waitlist.'}</strong> Fill out the short form below with your address, what you have, and when you're free. Add photos if you like.</li>
+      <li>
+        <strong>We confirm and schedule.</strong> We'll reply by email or text{response ? ` (usually within ${response})` : ''} with a pickup window. We pick up from your home or business — <strong>please don't leave items on the curb.</strong>
+      </li>
+      <li><strong>We collect, wipe, and recycle or reuse.</strong> We carry out your items, give you a receipt, wipe your data, and route everything to reuse or authorized California e-waste recyclers. Data certificate available on request.</li>
+    </ol>
+
+    <h2>FAQ</h2>
+    <h3>Is it really free?</h3>
+    <p>Yes. Pickup in our service area is free. We may reuse or resell equipment that still works, which helps us keep the service free.</p>
+    <h3>Do you pay for my items?</h3>
+    <p>No. This is a free donation pickup; we don't buy electronics.</p>
+    <h3>What happens to my old electronics?</h3>
+    <p>Working items are tested and, where possible, resold or reused. Anything that doesn't work is sent to authorized e-waste recyclers in California. Nothing goes to the landfill.</p>
+    <h3>Will my data be erased?</h3>
+    <p>Yes — see <strong>Our data-destruction promise</strong> above. Back up first and sign out of your accounts. Ask for a certificate when you book.</p>
+    <h3>Do I need to be home?</h3>
+    <p>Someone should be there to hand over the items, or you can leave them at an agreed spot (garage, porch, or lobby). Please don't leave items on the curb or beside your bins.</p>
+    <h3>How many items do I need?</h3>
+    <p>There's no minimum for homes. For businesses with <strong>5 or more items</strong> we need a company name, contact person, and phone number (California program rules require us to record this).</p>
+    <h3>Can you take my old TV?</h3>
+    <p>Flat-panel TVs: yes. <strong>CRT (tube) TVs: not at this time.</strong></p>
+    <h3>What about batteries?</h3>
+    <p>Batteries that are <em>inside</em> a device are fine. Loose, damaged, swollen, or leaking batteries and large batteries (e-bike, scooter, car) are not. Please tape the terminals of any loose lithium battery or put it in its own bag, and tell us about anything that looks puffy or hot.</p>
+    <h3>Do I need to remove my SIM card, hard drive, or accounts?</h3>
+    <p>Remove SIM and memory cards, and sign out of accounts. You can leave hard drives in computers — we wipe them. Turn off Find My / Activation Lock on Apple, Google, or Microsoft devices.</p>
+    <h3>Do you give a receipt or certificate?</h3>
+    <p>Yes: we give a pickup receipt every time and a Certificate of Data Sanitization on request.</p>
+    <h3>Do you serve my city?</h3>
+    <p>We serve Palo Alto, Mountain View, Redwood City, and San José. Others: ask — we'll tell you if we can come.</p>
+    <h3>I run a business or office. Can you handle IT equipment?</h3>
+    <p>Yes, within the limits above. Let us know quantities, whether drives hold regulated or sensitive data (e.g., health, financial, client data), and any compliance requirements.</p>
+    <h3>Who is behind this?</h3>
+    <p>{settings.business_name}, Palo Alto, California.</p>
+
+    <form
+      class="panel stack ewaste"
+      id="pickup-form"
+      enctype="multipart/form-data"
+      data-guarded-form="ewaste"
+      data-endpoint={settings.form_endpoint}
+      data-mail={email}
+      data-subject={live ? 'E-waste pickup request' : 'E-waste pickup waitlist'}
+      data-success={success}
+      data-error={error}
+    >
+      <h2>{live ? 'Request a free pickup' : 'Join the pickup waitlist'}</h2>
+      <p class="trap-field">
+        <label for="ew-website">Website</label>
+        <input id="ew-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </p>
+      <input type="hidden" name="form_opened_at" value="" data-opened-at />
+      <label class="field">Your name <input name="name" type="text" required maxlength="100" autocomplete="name" /></label>
+      <label class="field">Email <input name="email" type="email" required autocomplete="email" /></label>
+      <label class="field">Phone <input name="phone" type="tel" required autocomplete="tel" inputmode="tel" pattern="^(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$" title="Use a 10-digit US phone number" /></label>
+      <label class="field">Pickup address (street, unit) <input name="address" type="text" required maxlength="200" autocomplete="address-line1" /></label>
+      <label class="field">City
+        <select name="city" required>
+          <option value="" selected disabled>Choose a city</option>
+          <option>Palo Alto</option>
+          <option>Mountain View</option>
+          <option>Redwood City</option>
+          <option>San José</option>
+          <option>Other (we'll check)</option>
+        </select>
+      </label>
+      <label class="field">ZIP code <input name="zip" type="text" required inputmode="numeric" pattern="\d{5}" maxlength="5" autocomplete="postal-code" title="5-digit ZIP code" /></label>
+      <fieldset>
+        <legend>Is this for a home or a business?</legend>
+        <div class="choices">
+          <label><input type="radio" name="customer_type" value="Residential" required /> Residential</label>
+          <label><input type="radio" name="customer_type" value="Business / organization" required /> Business / organization</label>
+        </div>
+      </fieldset>
+      <div data-ewaste-business hidden>
+        <label class="field">Business or organization name <input name="business_name" type="text" maxlength="150" autocomplete="organization" /></label>
+        <label class="field">Contact person (if different) <input name="contact_person" type="text" maxlength="100" autocomplete="name" /></label>
+      </div>
+      <!-- Checkbox group shares name="categories". .htmlvalidate.json lets checkboxes share a name because that is one field with several values. -->
+      <fieldset>
+        <legend>What are you giving us?</legend>
+        <div class="choices">
+          <label><input type="checkbox" name="categories" value="Laptops/computers" /> Laptops/computers</label>
+          <label><input type="checkbox" name="categories" value="Monitors" /> Monitors</label>
+          <label><input type="checkbox" name="categories" value="Flat-panel TVs" /> Flat-panel TVs</label>
+          <label><input type="checkbox" name="categories" value="Phones/tablets" /> Phones/tablets</label>
+          <label><input type="checkbox" name="categories" value="Printers/scanners" /> Printers/scanners</label>
+          <label><input type="checkbox" name="categories" value="Networking gear" /> Networking gear</label>
+          <label><input type="checkbox" name="categories" value="Audio/video/game devices" /> Audio/video/game devices</label>
+          <label><input type="checkbox" name="categories" value="Cables & accessories" /> Cables &amp; accessories</label>
+          <label><input type="checkbox" name="categories" value="Hard drives / storage media" /> Hard drives / storage media</label>
+          <label><input type="checkbox" name="categories" value="Other electronics" /> Other electronics</label>
+        </div>
+      </fieldset>
+      <label class="field">Approximate quantity
+        <select name="quantity" required>
+          <option value="" selected disabled>Choose a quantity</option>
+          <option>1–5 items</option>
+          <option>6–15</option>
+          <option>16–30</option>
+          <option>31–100</option>
+          <option>100+ (we'll contact you)</option>
+        </select>
+      </label>
+      <fieldset>
+        <legend>Do any items hold personal or business data?</legend>
+        <div class="choices">
+          <label><input type="radio" name="has_data" value="Yes" required /> Yes</label>
+          <label><input type="radio" name="has_data" value="No" required /> No</label>
+          <label><input type="radio" name="has_data" value="Not sure" required /> Not sure</label>
+        </div>
+      </fieldset>
+      <div data-ewaste-certificate hidden>
+        <label class="choice"><input type="checkbox" name="needs_certificate" value="yes" /> Need a Certificate of Data Sanitization?</label>
+      </div>
+      <label class="field">Photos of items (optional)
+        <input name="photos" type="file" accept=".jpg,.jpeg,.png,.heic,.webp,image/jpeg,image/png,image/heic,image/webp" multiple />
+      </label>
+      <p class="muted">jpg, png, heic, or webp. Up to 5 files, 10 MB each.</p>
+      <label class="field">Preferred pickup date <input name="preferred_date" type="date" required /></label>
+      <p class="muted">The earliest date is two business days from today. Use the notes if you are flexible.</p>
+      <label class="field">Preferred time window
+        <select name="time_window" required>
+          <option value="" selected disabled>Choose a window</option>
+          <option>Morning (8–12)</option>
+          <option>Afternoon (12–4)</option>
+          <option>Late afternoon (4–6)</option>
+          <option>Flexible</option>
+        </select>
+      </label>
+      <label class="field">Anything we should know? (stairs, access, large/heavy items, damaged screens or batteries)
+        <textarea name="notes" maxlength="1000"></textarea>
+      </label>
+      <label class="choice">
+        <input type="checkbox" name="consent" value="yes" required />
+        <span>I confirm I own these items or am authorized to give them away, they contain no loose/damaged batteries or hazardous chemicals, and I've backed up anything I want to keep. I agree that {settings.business_name} may contact me about this request and keep a record of my name, address, and the items collected as required for e-waste handling. <a href="/privacy">Privacy Policy</a>.</span>
+      </label>
+      <button class="btn btn-gold" type="submit" disabled data-arm>{live ? 'Request pickup' : 'Join waitlist'}</button>
+      <p class="form-note" data-form-note>The button waits a few seconds so drive-by bots miss it. You can also email {email}.</p>
+    </form>
+
+    <h2>Important information</h2>
+    <p><em>This page is general information, not legal advice. Pickup availability depends on item type, condition, and location; we may decline items that appear unsafe or are not on our accepted list. Data wiping is performed to the method stated; you are responsible for backing up data you wish to keep. By requesting a pickup you confirm you are the owner or authorized to release the items. {settings.business_name} is not currently R2, e-Stewards, or NAID certified. Services and policies may change without notice.</em></p>
+    <p class="muted">
+      {year ? <>© {year} </> : null}
+      {settings.business_name} · Palo Alto, CA · <a href={`mailto:${email}`}>{email}</a>
+      {phone ? <> · {phone}</> : null}
+    </p>
+  </div>
+</BaseLayout>

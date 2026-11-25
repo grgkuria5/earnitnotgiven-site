@@ -282,6 +282,72 @@ function allow(key: string, max: number, windowMs: number): boolean {
   return true;
 }
 
+function businessDaysOut(days: number): string {
+  const date = new Date();
+  let left = days;
+  while (left > 0) {
+    date.setDate(date.getDate() + 1);
+    const day = date.getDay();
+    if (day !== 0 && day !== 6) left -= 1;
+  }
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function initEwasteForm(form: HTMLFormElement) {
+  const date = form.querySelector<HTMLInputElement>('input[name="preferred_date"]');
+  if (date) date.min = businessDaysOut(2);
+  const business = form.querySelector<HTMLElement>('[data-ewaste-business]');
+  const businessInputs = [...(business?.querySelectorAll<HTMLInputElement>('input') ?? [])];
+  const syncBusiness = () => {
+    const on = form.querySelector<HTMLInputElement>('input[name="customer_type"]:checked')?.value === 'Business / organization';
+    business?.toggleAttribute('hidden', !on);
+    businessInputs.forEach((input) => {
+      input.required = on;
+      if (!on) input.value = '';
+    });
+  };
+  form.querySelectorAll<HTMLInputElement>('input[name="customer_type"]').forEach((radio) => {
+    radio.addEventListener('change', syncBusiness);
+  });
+  const certificate = form.querySelector<HTMLElement>('[data-ewaste-certificate]');
+  const syncCertificate = () => {
+    const value = form.querySelector<HTMLInputElement>('input[name="has_data"]:checked')?.value;
+    const show = value === 'Yes' || value === 'Not sure';
+    certificate?.toggleAttribute('hidden', !show);
+    if (!show) {
+      const box = certificate?.querySelector<HTMLInputElement>('input');
+      if (box) box.checked = false;
+    }
+  };
+  form.querySelectorAll<HTMLInputElement>('input[name="has_data"]').forEach((radio) => {
+    radio.addEventListener('change', syncCertificate);
+  });
+}
+
+function ewasteReady(form: HTMLFormElement, note: HTMLElement | null): boolean {
+  const photos = form.querySelector<HTMLInputElement>('input[name="photos"]');
+  const files = [...(photos?.files ?? [])];
+  const allowed = /\.(jpe?g|png|heic|webp)$/i;
+  if (files.length > 5 || files.some((file) => file.size > 10 * 1024 * 1024 || !allowed.test(file.name))) {
+    if (note) note.textContent = form.dataset.error || 'Something went wrong. Please try again.';
+    return false;
+  }
+  const categories = [...form.querySelectorAll<HTMLInputElement>('input[name="categories"]')];
+  if (categories.length && !categories.some((box) => box.checked)) {
+    categories[0].setCustomValidity('Choose at least one kind of item.');
+    categories[0].reportValidity();
+    categories[0].setCustomValidity('');
+    return false;
+  }
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return false;
+  }
+  return true;
+}
+
 function initForms() {
   const now = String(Date.now());
   document.querySelectorAll<HTMLInputElement>('[data-opened-at]').forEach((input) => {
@@ -294,11 +360,12 @@ function initForms() {
   }, 3000);
 
   document.querySelectorAll<HTMLFormElement>('[data-guarded-form]').forEach((form) => {
+    if (form.dataset.guardedForm === 'ewaste') initEwasteForm(form);
     form.addEventListener('submit', (event) => {
       if (form.dataset.passed === '1') return;
       event.preventDefault();
       const note = form.querySelector<HTMLElement>('[data-form-note]');
-      const trap = form.querySelector<HTMLInputElement>('[name="company_website"]');
+      const trap = form.querySelector<HTMLInputElement>('[name="company_website"], [name="website"]');
       const opened = Number(form.querySelector<HTMLInputElement>('[data-opened-at]')?.value || '0');
       if (trap && trap.value.trim()) {
         if (note) note.textContent = 'Thanks. If this was a real note, email sales@earnitnotgiven.com.';
@@ -308,6 +375,7 @@ function initForms() {
         if (note) note.textContent = 'Please wait a few seconds and try again.';
         return;
       }
+      if (form.dataset.guardedForm === 'ewaste' && !ewasteReady(form, note)) return;
       const kind = form.dataset.guardedForm || 'form';
       if (!allow(kind, 3, 10 * 60 * 1000)) {
         if (note) note.textContent = 'That is enough requests for now. Email sales@earnitnotgiven.com if you still need help.';
@@ -323,11 +391,17 @@ function initForms() {
       }
       const email = form.dataset.mail || 'sales@earnitnotgiven.com';
       const data = new FormData(form);
+      const skip = new Set(['company_website', 'website', 'form_opened_at']);
       const lines = [...data.entries()]
-        .filter(([key]) => key !== 'company_website' && key !== 'form_opened_at')
-        .map(([key, value]) => `${key}: ${String(value)}`);
+        .filter(([key, value]) => !skip.has(key) && !(value instanceof File && value.size === 0))
+        .map(([key, value]) => `${key}: ${value instanceof File ? value.name : String(value)}`);
       location.href = `mailto:${email}?subject=${encodeURIComponent(form.dataset.subject || 'Website message')}&body=${encodeURIComponent(lines.join('\n'))}`;
-      if (note) note.textContent = 'Your email app should open with this message. If it does not, write to sales@earnitnotgiven.com.';
+      if (note) {
+        const name = String(data.get('name') || '').trim();
+        note.textContent = form.dataset.success
+          ? form.dataset.success.replaceAll('{name}', name)
+          : 'Your email app should open with this message. If it does not, write to sales@earnitnotgiven.com.';
+      }
     });
   });
 }

@@ -40,7 +40,10 @@ const menu = visibleCategories();
       <a href="/deals" aria-current={current('/deals')}>Deals</a>
       <a href="/designs" aria-current={current('/designs')}>Designs</a>
       <a href="/guides" aria-current={current('/guides')}>Guides</a>
-      <a href="/tech-help" aria-current={current('/tech-help')}>Tech Help</a>
+      <span class="nav-stack">
+        <a href="/tech-help" aria-current={current('/tech-help')}>Tech Help</a>
+        <a href="/ewaste-pickup" aria-current={current('/ewaste-pickup')}>E-Waste Pickup</a>
+      </span>
       <a href="/about" aria-current={current('/about')}>About</a>
       <div class="mega-bar">
         {menu.map((category) => (

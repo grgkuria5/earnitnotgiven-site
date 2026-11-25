@@ -13,6 +13,7 @@
     "input-missing-label": "off",
     "prefer-native-element": "off",
     "no-redundant-role": "off",
-    "long-title": "off"
+    "long-title": "off",
+    "form-dup-name": ["error", { "shared": ["radio", "button", "reset", "submit", "checkbox"] }]
   }
 }

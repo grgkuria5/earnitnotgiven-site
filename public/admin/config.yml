@@ -157,6 +157,16 @@ collections:
             field: { label: Message, name: message, widget: string }
           - { label: eBay flat shipping USD, name: ebay_flat_shipping_usd, widget: number, value_type: float, min: 0, max: 200, default: 12, hint: "Used when a category rate and the item rate are blank. Shown before Buy now." }
           - { label: Contact email, name: contact_email, widget: string }
+          - label: E-waste launch mode
+            name: ewaste_launch_mode
+            widget: select
+            options: [waitlist, live]
+            default: waitlist
+            hint: "Stay on waitlist until the DTSC notification has been filed and 30 days have passed. Live changes the form to a pickup request and shows the DTSC sentence. Do not add R2, e-Stewards, or NAID badges."
+          - { label: E-waste data-destruction partner, name: ewaste_partner_name, widget: string, required: false, hint: "Leave blank to hide the partner sentence. Do not invent a name." }
+          - { label: E-waste phone, name: ewaste_phone, widget: string, required: false, hint: "Shown at the bottom of the e-waste page. Leave blank to hide." }
+          - { label: E-waste response time, name: ewaste_response_time, widget: string, required: false, hint: "For example 1–2 business days. Leave blank to hide the usually-within line." }
+          - { label: E-waste copyright year, name: ewaste_year, widget: string, required: false, hint: "Four-digit year for the e-waste page footer. Leave blank to hide." }
           - { label: Sales email, name: sales_email, widget: string }
           - { label: Location label, name: location_label, widget: string }
           - { label: Booking form endpoint, name: form_endpoint, widget: string, required: false, hint: "https Formspree or FormSubmit URL. No secrets. Blank uses email." }

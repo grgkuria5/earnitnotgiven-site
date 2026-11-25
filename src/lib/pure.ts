@@ -43,6 +43,11 @@ export type Settings = {
   refreshed_banner: boolean;
   refreshed_messages: string[];
   ebay_flat_shipping_usd: number;
+  ewaste_launch_mode: 'waitlist' | 'live';
+  ewaste_partner_name: string;
+  ewaste_phone: string;
+  ewaste_response_time: string;
+  ewaste_year: string;
 };
 
 export type FaqItem = {
@@ -350,6 +355,11 @@ export function normalizeSettings(input: unknown): Settings {
       if (item && typeof item === 'object' && 'message' in item) return asString((item as { message?: unknown }).message).slice(0, 140);
       return '';
     }).filter(Boolean).slice(0, 8),
+    ewaste_launch_mode: asString(raw.ewaste_launch_mode) === 'live' ? 'live' : 'waitlist',
+    ewaste_partner_name: asString(raw.ewaste_partner_name).slice(0, 120),
+    ewaste_phone: asString(raw.ewaste_phone).slice(0, 40),
+    ewaste_response_time: asString(raw.ewaste_response_time).slice(0, 80),
+    ewaste_year: asString(raw.ewaste_year).replace(/[^\d]/g, '').slice(0, 4),
   };
 }
 

@@ -6,12 +6,33 @@ import {
   escapeHtml,
   hexColor,
   looksSensitive,
+  normalizeSettings,
   paypalLines,
   publicHttpsUrl,
   renderRichText,
   shiftSeconds,
   stripeLink,
 } from './pure.ts';
+
+test('e-waste stays on the waitlist until launch mode is live', () => {
+  const blank = normalizeSettings({});
+  assert.equal(blank.ewaste_launch_mode, 'waitlist');
+  assert.equal(blank.ewaste_partner_name, '');
+  assert.equal(blank.ewaste_phone, '');
+  assert.equal(blank.ewaste_response_time, '');
+  assert.equal(blank.ewaste_year, '');
+  const live = normalizeSettings({
+    ewaste_launch_mode: 'live',
+    ewaste_partner_name: 'Example Destruction',
+    ewaste_phone: '650-555-0100',
+    ewaste_response_time: '1–2 business days',
+    ewaste_year: '2026',
+  });
+  assert.equal(live.ewaste_launch_mode, 'live');
+  assert.equal(live.ewaste_partner_name, 'Example Destruction');
+  assert.equal(live.ewaste_year, '2026');
+  assert.equal(normalizeSettings({ ewaste_launch_mode: 'certified' }).ewaste_launch_mode, 'waitlist');
+});
 
 test('shift settings stay in range', () => {
   assert.equal(shiftSeconds(8), 12);

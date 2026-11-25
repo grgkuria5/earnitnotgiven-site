@@ -6,6 +6,13 @@ const must = [
   ['dist/index.html', 'strict-origin-when-cross-origin'],
   ['dist/index.html', 'Get 10% off your first order'],
   ['dist/tech-help/index.html', 'Ask for quote'],
+  ['dist/ewaste-pickup/index.html', 'Join the pickup waitlist'],
+  ['dist/ewaste-pickup/index.html', 'Join waitlist'],
+  ['dist/ewaste-pickup/index.html', 'Pickups start soon'],
+  ['dist/ewaste-pickup/index.html', "we don't buy electronics"],
+  ['dist/ewaste-pickup/index.html', 'george@earnitnotgiven.com'],
+  ['dist/ewaste-pickup/index.html', 'href="/privacy"'],
+  ['dist/index.html', 'href="/ewaste-pickup"'],
   ['dist/about/index.html', 'Palo Alto'],
   ['dist/guardianorbit/index.html', 'Coming soon'],
   ['dist/guides/index.html', 'No guides are published yet'],
@@ -53,6 +60,19 @@ if (!productTemplate.includes('Also on Amazon')) {
 }
 if (home.includes('As an Amazon Associate')) {
   console.error('Amazon disclosure is showing while the tag is empty');
+  process.exit(1);
+}
+const ewaste = await readFile('dist/ewaste-pickup/index.html', 'utf8');
+if (ewaste.includes('notified the California Department of Toxic Substances Control')) {
+  console.error('DTSC sentence is showing while e-waste launch mode is waitlist');
+  process.exit(1);
+}
+if (/<(img|svg)\b[^>]*(R2|e-Stewards|NAID)/i.test(ewaste)) {
+  console.error('certification badge found on the e-waste page');
+  process.exit(1);
+}
+if (ewaste.includes('[[') || ewaste.includes('owner to confirm')) {
+  console.error('unfilled e-waste placeholder is still on the page');
   process.exit(1);
 }
 console.log('site checks passed');
