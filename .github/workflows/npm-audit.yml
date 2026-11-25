@@ -1,0 +1,79 @@
+name: npm audit
+
+on:
+  schedule:
+    - cron: "17 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Audit high and critical vulnerabilities
+        id: audit
+        shell: bash
+        run: |
+          set +e
+          set +o pipefail
+          npm audit --audit-level=high > audit.txt 2>&1
+          code=$?
+          cat audit.txt
+          echo "code=${code}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Open an issue and fail when high or critical vulnerabilities are present
+        if: steps.audit.outputs.code != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          title="npm audit: high or critical vulnerabilities"
+          body="$(mktemp)"
+          {
+            echo "Weekly \`npm audit --audit-level=high\` failed on \`${GITHUB_SHA}\`."
+            echo
+            echo '```text'
+            sed 's/```/` ` `/g' audit.txt | tail -c 50000
+            echo
+            echo '```'
+          } > "$body"
+          existing="$(
+            gh issue list --state open --limit 100 --json number,title \
+              | jq -r --arg title "$title" '.[] | select(.title == $title) | .number' \
+              | head -1
+          )"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file "$body"
+          else
+            gh issue create --title "$title" --body-file "$body"
+          fi
+          exit 1
+
+      - name: Close a stale audit issue when the audit is clean
+        if: steps.audit.outputs.code == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          title="npm audit: high or critical vulnerabilities"
+          existing="$(
+            gh issue list --state open --limit 100 --json number,title \
+              | jq -r --arg title "$title" '.[] | select(.title == $title) | .number' \
+              | head -1
+          )"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Weekly \`npm audit --audit-level=high\` is clean on \`${GITHUB_SHA}\`."
+            gh issue close "$existing" --reason completed
+          fi

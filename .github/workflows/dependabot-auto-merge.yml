@@ -1,0 +1,78 @@
+name: Dependabot auto-merge
+
+# Minor and patch Dependabot updates merge only after the Check workflow's
+# build and tests pass. This file never checks out pull request code.
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.repository == 'grgkuria5/earnitnotgiven-site' &&
+      github.event.pull_request.base.ref == 'main'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge minor and patch updates after build and tests
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-minor' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          contexts="$(
+            gh api "repos/${GITHUB_REPOSITORY}/branches/main/protection" \
+              --jq '[.required_status_checks.contexts[]?, .required_status_checks.checks[]?.context] | unique | .[]' \
+              2>/dev/null || true
+          )"
+
+          # When main requires the Check job, GitHub holds --auto until it passes.
+          if printf '%s\n' "$contexts" | grep -Fxq 'check'; then
+            gh pr merge --auto --squash "$PR_URL"
+            exit 0
+          fi
+
+          echo "main does not require the check status yet. Waiting for that job before merging."
+          for _ in $(seq 1 60); do
+            conclusion="$(
+              gh pr view "$PR_URL" --json statusCheckRollup --jq \
+                '([.statusCheckRollup[]? | select(.name == "check") | .conclusion] | last) // "pending"'
+            )"
+            case "$conclusion" in
+              success|SUCCESS)
+                if gh pr merge --auto --squash "$PR_URL"; then
+                  exit 0
+                fi
+                echo "Auto-merge is unavailable. Build and tests passed, so squash-merging."
+                gh pr merge --squash "$PR_URL"
+                exit 0
+                ;;
+              failure|FAILURE|cancelled|CANCELLED|timed_out|TIMED_OUT|action_required|ACTION_REQUIRED|skipped|SKIPPED)
+                echo "Not merging. The check job finished with ${conclusion}."
+                exit 1
+                ;;
+              *)
+                echo "Waiting for the check job (current: ${conclusion})."
+                sleep 20
+                ;;
+            esac
+          done
+          echo "Timed out waiting for the check job."
+          exit 1
