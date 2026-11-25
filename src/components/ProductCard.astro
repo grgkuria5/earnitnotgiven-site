@@ -29,7 +29,7 @@ const off = flashPrice ? flashPercent(product.data.price, flashPrice) : 0;
   data-flash-end={flashEnd ?? undefined}
   data-flash-price={flashPrice ?? undefined}
 >
-  <a href={href}>
+  <a href={href} aria-label={product.data.title}>
     {image ? <img src={image} alt="" width="800" height="600" /> : <div class="ph"></div>}
     {product.data.sample && <span class="flag">Sample</span>}
     {flash && off > 0 && <span class="save">{off}% off</span>}

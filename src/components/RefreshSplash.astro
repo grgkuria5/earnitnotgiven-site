@@ -4,7 +4,7 @@ const messages = settings.refreshed_banner ? settings.refreshed_messages : [];
 ---
 {messages.length > 0 && (
   <div class="refresh-splash" data-refresh-splash>
-    <p class="refresh-kicker">Refreshed & tested</p>
+    <p class="refresh-kicker">Refreshed &amp; tested</p>
     <div class="refresh-rotator">
       {messages.map((message, index) => (
         <p data-refresh-line hidden={index > 0}>{message}</p>

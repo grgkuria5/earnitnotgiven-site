@@ -16,7 +16,7 @@ const { designs } = Astro.props as { designs: EtsyDesign[] };
     data-brand="EarnItNotGiven"
     data-search={`${design.title} ${design.tags.join(' ')} etsy`.toLowerCase()}
   >
-    <a href={design.url} rel="noopener noreferrer" target="_blank">
+    <a href={design.url} rel="noopener noreferrer" target="_blank" aria-label={design.title}>
       {design.image ? <img src={design.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
     </a>
     <h3><a href={design.url} rel="noopener noreferrer" target="_blank">{design.title}</a></h3>

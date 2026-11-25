@@ -12,6 +12,7 @@
     "svg-focusable": "off",
     "input-missing-label": "off",
     "prefer-native-element": "off",
-    "no-redundant-role": "off"
+    "no-redundant-role": "off",
+    "long-title": "off"
   }
 }

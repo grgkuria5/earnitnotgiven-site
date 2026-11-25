@@ -7,7 +7,7 @@ const paypal = paypalReady(settings.paypal_business_email);
 ---
 {items.map((item) => (
   <article class="card" data-item data-title={item.title} data-price={item.total ?? item.price ?? 0} data-condition={item.condition} data-type="physical" data-search={item.title.toLowerCase()}>
-    <a href={`/ebay/${item.id}`}>
+    <a href={`/ebay/${item.id}`} aria-label={item.title}>
       {item.image ? <img src={item.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
     </a>
     {item.refreshed && item.status === 'active' && <SellerRibbon />}

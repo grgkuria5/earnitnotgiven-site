@@ -18,6 +18,10 @@ interface Props {
 }
 const { title, description, path = Astro.url.pathname, image = '/images/og.png', jsonLd, tone = 'tech' } = Astro.props;
 const canonical = new URL(path, SITE).toString();
+// Keep the full page name. eBay listings use the seller's title here and as the
+// visible heading, and many of those titles already exceed 70 characters.
+// .htmlvalidate.json turns long-title off so the name is not cut down to satisfy
+// that SEO length heuristic.
 const fullTitle = title.includes('Earn It Not Given') ? title : `${title} · Earn It Not Given`;
 const ld = jsonLd ? jsonForScript(jsonLd) : '';
 const scriptHashes = ld ? [createHash('sha256').update(ld, 'utf8').digest('base64')] : [];
