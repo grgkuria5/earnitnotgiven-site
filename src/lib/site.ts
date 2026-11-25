@@ -163,7 +163,7 @@ export function etsyProducts(): EtsyDesign[] {
       const title = (row.title ?? '').trim();
       if (!url || !title) return null;
       const tags = Array.isArray(row.tags) ? row.tags.map(String) : [];
-      const ai = Boolean(row.ai_assisted) || tags.some((tag) => /ai|artificial/i.test(tag)) || /\bai\b/i.test(title);
+      const ai = Boolean(row.ai_assisted) || tags.some((tag) => /\b(ai|ai-generated|ai-assisted|artificial intelligence)\b/i.test(tag)) || /\bai[- ]?(generated|assisted|art)\b/i.test(title);
       const image = safeUrl(row.image ?? '');
       return {
         title,
@@ -251,6 +251,50 @@ export function etsyForCategory(node: CategoryNode): EtsyDesign[] {
     if (design.subcategory === node.id || design.category === node.id) return true;
     return false;
   });
+}
+
+export type HomeListing = {
+  source: 'etsy' | 'ebay';
+  id: string;
+  title: string;
+  url: string;
+  price: number | null;
+  image: string;
+  ai: boolean;
+};
+
+export function homeMarketplaceListings(): HomeListing[] {
+  const etsy = etsyProducts().filter((design) => design.url && design.title && design.price !== null);
+  const ebay = ebayProducts().filter((item) => item.status === 'active' && item.url && item.title && item.price !== null);
+  const mixed: HomeListing[] = [];
+  const length = Math.max(etsy.length, ebay.length);
+  for (let index = 0; index < length; index += 1) {
+    const design = etsy[index];
+    if (design) {
+      mixed.push({
+        source: 'etsy',
+        id: design.id,
+        title: design.title,
+        url: design.url,
+        price: design.price,
+        image: design.image,
+        ai: design.ai,
+      });
+    }
+    const item = ebay[index];
+    if (item) {
+      mixed.push({
+        source: 'ebay',
+        id: item.id,
+        title: item.title,
+        url: item.url,
+        price: item.price,
+        image: item.image,
+        ai: false,
+      });
+    }
+  }
+  return mixed;
 }
 
 export type AffiliateProgram = 'amazon' | 'newegg' | 'bestbuy' | 'bh' | 'other';

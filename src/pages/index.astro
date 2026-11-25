@@ -5,15 +5,23 @@ import Newsletter from '../components/Newsletter.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import RefreshSplash from '../components/RefreshSplash.astro';
 import Orbit from '../components/Orbit.astro';
-import { allProducts, ebayProducts, etsyProducts, priceOf, settings, SITE, visibleCategories } from '../lib/site';
-import EbayCards from '../components/EbayCards.astro';
-import { money } from '../lib/pure';
+import CatIcon from '../components/CatIcon.astro';
+import HomeListings from '../components/HomeListings.astro';
+import {
+  allProducts,
+  homeMarketplaceListings,
+  priceOf,
+  settings,
+  SITE,
+  visibleCategories,
+} from '../lib/site';
 
 const products = await allProducts();
 const deals = products.filter((product) => product.data.featured || priceOf(product) < product.data.price).slice(0, 8);
 const flash = products.filter((product) => typeof product.data.flash_price === 'number' && product.data.flash_start && product.data.flash_end);
-const designs = etsyProducts().slice(0, 8);
-const ebay = ebayProducts().filter((item) => item.status === 'active').slice(0, 8);
+const market = homeMarketplaceListings();
+const etsyCount = market.filter((item) => item.source === 'etsy').length;
+const ebayCount = market.filter((item) => item.source === 'ebay').length;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Store',
@@ -25,6 +33,20 @@ const jsonLd = {
 };
 ---
 <BaseLayout title="Hand-tested tech in Palo Alto" description={settings.tagline} path="/" jsonLd={jsonLd}>
+  <nav class="cat-strip-wrap" aria-label="Shop by category">
+    <div class="wrap cat-strip-bar">
+      <button class="cat-strip-arrow" type="button" data-cat-strip-prev aria-label="Previous categories">‹</button>
+      <div class="cat-strip" data-cat-strip>
+        {visibleCategories().map((category) => (
+          <a class={`cat-tile tone-${category.tone}`} href={category.href}>
+            <span class="cat-tile-art" aria-hidden="true"><CatIcon name={category.icon} /></span>
+            <span class="cat-tile-label">{category.label}</span>
+          </a>
+        ))}
+      </div>
+      <button class="cat-strip-arrow" type="button" data-cat-strip-next aria-label="Next categories">›</button>
+    </div>
+  </nav>
   <RefreshSplash />
   <div class="shift-hero">
   <section class="wrap hero">
@@ -50,15 +72,27 @@ const jsonLd = {
         <li>Palo Alto</li>
         <li>A real person on email</li>
       </ul>
-      <aside class="panel">
-        <p class="eyebrow">On the counter</p>
-        <h2>Designs are live on Etsy</h2>
-        <p>Tees, leggings, bomber jackets, and wall art open on Etsy at the from-price on each card. Electronics show up here after George tests them by hand.</p>
-        <a href="/designs">EarnItNotGiven designs</a>
-      </aside>
     </div>
   </section>
   </div>
+
+  <section class="wrap section" id="from-the-shop">
+    <p class="eyebrow">Etsy · eBay</p>
+    <h2>Featured from the shop</h2>
+    <p class="muted">Active listings from the EarnItNotGiven Etsy shop and eBay seller workhard1140, mixed together. Checkout stays on Etsy or eBay.</p>
+    {market.length ? (
+      <div class="grid cards">
+        <HomeListings items={market} />
+      </div>
+    ) : (
+      <p class="empty">No verified Etsy or eBay listings are in the catalog yet.</p>
+    )}
+    <p class="market-links">
+      <a href="/designs">All Etsy designs{etsyCount ? ` (${etsyCount})` : ''}</a>
+      <a href="/ebay">All eBay electronics{ebayCount ? ` (${ebayCount})` : ''}</a>
+    </p>
+  </section>
+
   <TrustStrip />
   {flash.length > 0 && (
     <section class="wrap section" data-flash-strip>
@@ -71,59 +105,14 @@ const jsonLd = {
     </section>
   )}
 
-  <section class="wrap section">
-    <h2>Shop by category</h2>
-    <div class="grid cats-grid">
-      {visibleCategories().map((category) => (
-        <a class={`cat tone-${category.tone}`} href={category.href}>
-          <p class="eyebrow">{category.tone === 'tech' ? 'Tech' : 'Style'}</p>
-          <h3>{category.label}</h3>
-          <p class="muted">{category.blurb}</p>
-        </a>
-      ))}
-    </div>
-  </section>
-
   <section class="wrap section tone-tech">
     <h2>On the bench</h2>
-    <p class="muted">Hand-tested electronics and computers.</p>
+    <p class="muted">Hand-tested electronics and computers listed for sale on this site.</p>
     {deals.length ? (
       <div class="strip">
         {deals.map((product) => <ProductCard product={product} />)}
       </div>
-    ) : <p class="empty">Nothing on the bench yet. The designs below are the live print shop.</p>}
-  </section>
-
-  <section class="wrap section tone-tech" id="ebay">
-    <h2>Electronics (eBay)</h2>
-    <p class="muted">Copied from seller workhard1140. Buy now charges the item price plus the shipping rate shown on the card. Also on eBay stays as a second link. The eBay listing itself is not changed from this site.</p>
-    {ebay.length ? (
-      <div class="grid cards">
-        <EbayCards items={ebay} />
-      </div>
-    ) : <p class="empty">No active eBay listings are copied in yet.</p>}
-    <p><a href="/ebay">All electronics from eBay</a></p>
-  </section>
-
-  <section class="wrap section tone-fashion" id="designs">
-    <h2>EarnItNotGiven Designs (Etsy)</h2>
-    <p class="muted">Tees, leggings, bomber jackets, posters, and wall art. Each card opens the Etsy listing. Checkout for these stays on Etsy.</p>
-    {designs.length ? (
-      <div class="grid cards">
-        {designs.map((design) => (
-          <article class="card">
-            {design.image ? <img src={design.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
-            <h3>{design.title}</h3>
-            {design.price !== null && <p class="price">From {money(design.price)}</p>}
-            {design.ai && <p class="ai-note">Made with AI assistance</p>}
-            <p class="meta"><a class="btn btn-gold" href={design.url} rel="noopener noreferrer" target="_blank">View on Etsy</a></p>
-          </article>
-        ))}
-      </div>
-    ) : (
-      <p class="empty">Design listings will show here when they are in the catalog. Until then, the print shop still lives on Etsy under EarnItNotGiven.</p>
-    )}
-    <p><a href="/designs">All designs</a></p>
+    ) : <p class="empty">Nothing on the bench yet. The Etsy and eBay listings above are live now.</p>}
   </section>
 
   <section class="wrap section">

@@ -426,6 +426,101 @@ html[data-shift="on"] .btn-gold {
 .section { padding: 1.4rem 0 2rem; }
 .section h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+
+.cat-strip-wrap {
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg-elev) 70%, transparent);
+}
+.cat-strip-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 0.35rem;
+  padding: 0.55rem 0;
+}
+.cat-strip {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.15rem 0.1rem 0.35rem;
+  flex: 1;
+  min-width: 0;
+  scrollbar-width: thin;
+}
+.cat-tile {
+  flex: 0 0 6.6rem;
+  scroll-snap-align: start;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  color: var(--text);
+  min-height: 44px;
+}
+.cat-tile-art {
+  width: 4.4rem;
+  height: 4.4rem;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, var(--line));
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--section-accent, var(--gold)) 22%, #121821), #121821);
+  color: var(--gold-2);
+}
+.cat-tile.tone-tech { --section-accent: var(--cyan); }
+.cat-tile.tone-fashion { --section-accent: var(--gold); }
+.cat-tile-art .cat-icon { width: 1.7rem; height: 1.7rem; }
+.cat-tile-label {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  text-align: center;
+  font-weight: 650;
+  max-width: 6.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cat-tile:hover .cat-tile-art,
+.cat-tile:focus-visible .cat-tile-art {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 40%, transparent);
+}
+.cat-strip-arrow {
+  flex: none;
+  width: 2.2rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 40%, transparent);
+  color: var(--gold-2);
+  font: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  align-self: center;
+  min-height: 2.2rem;
+}
+.cat-strip-arrow:hover { background: color-mix(in srgb, var(--gold) 16%, transparent); }
+.market-badge {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  z-index: 2;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.market-etsy { background: var(--gold); color: var(--ink); }
+.market-ebay { background: color-mix(in srgb, var(--cyan) 80%, #08313a); color: #061114; }
+.card > a { position: relative; display: block; }
+.market-links { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; margin-top: 1rem; }
+
 .cats-grid .cat {
   display: block;
   padding: 1.1rem;
@@ -662,6 +757,8 @@ html[data-shift="on"] .btn-gold {
     margin-top: 0.45rem;
     grid-template-columns: 1fr;
   }
+  .cat-strip-arrow { display: none; }
+  .cat-tile { flex-basis: 5.8rem; }
   .search { order: 3; flex-basis: 100%; }
   .banner .wrap { align-items: flex-start; flex-direction: column; }
 }

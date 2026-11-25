@@ -1,0 +1,21 @@
+---
+import { money } from '../lib/pure';
+import type { HomeListing } from '../lib/site';
+const { items } = Astro.props as { items: HomeListing[] };
+---
+{items.map((item) => (
+  <article class={`card source-${item.source}`}>
+    <a href={item.url} rel="noopener noreferrer" target="_blank" aria-label={item.title}>
+      {item.image ? <img src={item.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+      <span class={`market-badge market-${item.source}`}>{item.source === 'etsy' ? 'Etsy' : 'eBay'}</span>
+    </a>
+    <h3><a href={item.url} rel="noopener noreferrer" target="_blank">{item.title}</a></h3>
+    {item.price !== null && <p class="price">{item.source === 'etsy' ? `From ${money(item.price)}` : money(item.price)}</p>}
+    {item.ai && <p class="ai-note">Made with AI assistance</p>}
+    <p class="meta">
+      <a class="btn btn-gold" href={item.url} rel="noopener noreferrer" target="_blank">
+        {item.source === 'etsy' ? 'Buy on Etsy' : 'Buy on eBay'}
+      </a>
+    </p>
+  </article>
+))}
