@@ -108,7 +108,7 @@ export function productInCategory(product: ProductEntry, node: CategoryNode): bo
 export async function allProducts(): Promise<ProductEntry[]> {
   const products = await getCollection('products');
   return products
-    .filter((product) => !product.data.draft)
+    .filter((product) => !product.data.draft && !product.data.sample)
     .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.title.localeCompare(b.data.title));
 }
 
@@ -127,10 +127,33 @@ export function productHref(product: ProductEntry): string {
   return `/product/${product.id}`;
 }
 
-type EtsyRaw = { title?: string; etsy_url?: string; from_price_usd?: number; image?: string; tags?: string[]; ai_assisted?: boolean };
+type EtsyRaw = {
+  title?: string;
+  etsy_url?: string;
+  etsy_listing_id?: string;
+  from_price_usd?: number;
+  image?: string;
+  tags?: string[];
+  ai_assisted?: boolean;
+  category?: string;
+  subcategory?: string;
+};
 
-export function etsyProducts() {
-  const rows = Array.isArray(etsyJson.products) ? (etsyJson.products as EtsyRaw[]) : [];
+export type EtsyDesign = {
+  title: string;
+  url: string;
+  id: string;
+  price: number | null;
+  image: string;
+  tags: string[];
+  ai: boolean;
+  category: string;
+  subcategory: string;
+};
+
+export function etsyProducts(): EtsyDesign[] {
+  const raw = etsyJson as { products?: EtsyRaw[] } | EtsyRaw[];
+  const rows = Array.isArray(raw) ? raw : Array.isArray(raw.products) ? raw.products : [];
   return rows
     .map((row) => {
       const url = etsyLink(row.etsy_url ?? '');
@@ -142,13 +165,24 @@ export function etsyProducts() {
       return {
         title,
         url,
+        id: String(row.etsy_listing_id ?? ''),
         price: typeof row.from_price_usd === 'number' ? row.from_price_usd : null,
         image,
         tags,
         ai,
+        category: (row.category ?? '').trim(),
+        subcategory: (row.subcategory ?? '').trim(),
       };
     })
-    .filter((row): row is NonNullable<typeof row> => row !== null);
+    .filter((row): row is EtsyDesign => row !== null);
+}
+
+export function etsyForCategory(node: CategoryNode): EtsyDesign[] {
+  return etsyProducts().filter((design) => {
+    if (node.id === 'clothing') return design.category === 'clothing';
+    if (design.subcategory === node.id || design.category === node.id) return true;
+    return false;
+  });
 }
 
 export type AffiliateProgram = 'amazon' | 'newegg' | 'bestbuy' | 'bh' | 'other';

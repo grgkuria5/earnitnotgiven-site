@@ -14,7 +14,9 @@ const must = [
   ['dist/CNAME', 'www.earnitnotgiven.com'],
   ['dist/robots.txt', 'Disallow: /admin'],
   ['dist/.well-known/security.txt', 'sales@earnitnotgiven.com'],
-  ['dist/product/sample-14-inch-ultrabook/index.html', 'Also on Amazon'],
+  ['dist/designs/index.html', 'View on Etsy'],
+  ['dist/shop/clothing/index.html', 'View on Etsy'],
+  ['dist/shop/wall-art/index.html', 'View on Etsy'],
 ];
 
 for (const [file, needle] of must) {
@@ -33,6 +35,20 @@ if (guides.includes('Best budget laptops')) {
 const home = await readFile('dist/index.html', 'utf8');
 if (/onclick=|onsubmit=/i.test(home)) {
   console.error('inline event handler found');
+  process.exit(1);
+}
+if (home.includes('Sample Flash') || home.includes('sample-14-inch-ultrabook')) {
+  console.error('sample product leaked onto the home page');
+  process.exit(1);
+}
+const sampleFile = await readFile('src/content/products/sample-14-inch-ultrabook.md', 'utf8');
+if (!sampleFile.includes('sample: true')) {
+  console.error('sample product file is missing from the content folder');
+  process.exit(1);
+}
+const productTemplate = await readFile('src/pages/product/[slug].astro', 'utf8');
+if (!productTemplate.includes('Also on Amazon')) {
+  console.error('Also on Amazon is missing from the product template');
   process.exit(1);
 }
 if (home.includes('As an Amazon Associate')) {

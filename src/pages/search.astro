@@ -1,13 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Catalog from '../components/Catalog.astro';
-import { allProducts } from '../lib/site';
+import { allProducts, etsyProducts } from '../lib/site';
 const products = await allProducts();
+const designs = etsyProducts();
 ---
 <BaseLayout title="Search" description="Search the Earn It Not Given shop." path="/search">
   <div class="wrap">
     <h1>Search</h1>
     <p class="muted">Results update on this page after you type. The address bar search from the header lands here.</p>
-    <Catalog products={products} showQuery />
+    <Catalog products={products} designs={designs} showQuery />
   </div>
 </BaseLayout>

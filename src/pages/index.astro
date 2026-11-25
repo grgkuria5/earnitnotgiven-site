@@ -23,6 +23,15 @@ const jsonLd = {
 ---
 <BaseLayout title="Hand-tested tech in Palo Alto" description={settings.tagline} path="/" jsonLd={jsonLd}>
   <section class="wrap hero">
+    <figure class="hero-mark">
+      <img
+        src="/images/logo-hero.png"
+        srcset="/images/logo-hero.png 1x, /images/logo-hero@2x.png 2x"
+        alt=""
+        width="480"
+        height="392"
+      />
+    </figure>
     <div>
       <p class="eyebrow">Earn It Not Given LLC · {settings.location_label}</p>
       <h1>Tested gear. Earned style.</h1>
@@ -36,13 +45,13 @@ const jsonLd = {
         <li>Palo Alto</li>
         <li>A real person on email</li>
       </ul>
+      <aside class="panel">
+        <p class="eyebrow">On the counter</p>
+        <h2>Designs are live on Etsy</h2>
+        <p>Tees, leggings, bomber jackets, and wall art open on Etsy at the from-price on each card. Electronics show up here after George tests them by hand.</p>
+        <a href="/designs">EarnItNotGiven designs</a>
+      </aside>
     </div>
-    <aside class="panel">
-      <p class="eyebrow">On the counter</p>
-      <h2>Sample listings are marked</h2>
-      <p>The electronics, computers, phones, and clothing with a Sample flag are placeholders. They are not for sale. Real stock replaces them as George posts it.</p>
-      <a href="/about">About the shop</a>
-    </aside>
   </section>
   <TrustStrip />
   {flash.length > 0 && (
@@ -71,16 +80,16 @@ const jsonLd = {
 
   <section class="wrap section tone-tech">
     <h2>On the bench</h2>
-    <p class="muted">Featured pieces and anything with a sale price.</p>
+    <p class="muted">Hand-tested electronics and computers.</p>
     {deals.length ? (
       <div class="strip">
         {deals.map((product) => <ProductCard product={product} />)}
       </div>
-    ) : <p class="empty">No deals yet.</p>}
+    ) : <p class="empty">Nothing on the bench yet. The designs below are the live print shop.</p>}
   </section>
 
   <section class="wrap section tone-fashion" id="designs">
-    <h2>EarnItNotGiven Designs</h2>
+    <h2>EarnItNotGiven Designs (Etsy)</h2>
     <p class="muted">Tees, leggings, bomber jackets, posters, and wall art. Each card opens the Etsy listing. Checkout for these stays on Etsy.</p>
     {designs.length ? (
       <div class="grid cards">

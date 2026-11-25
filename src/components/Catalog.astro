@@ -1,9 +1,11 @@
 ---
 import Filters from './Filters.astro';
 import ProductCard from './ProductCard.astro';
-import type { ProductEntry } from '../lib/site';
-const { products, showQuery = false, brands = [], specs = [] } = Astro.props as {
+import EtsyCards from './EtsyCards.astro';
+import type { EtsyDesign, ProductEntry } from '../lib/site';
+const { products, designs = [], showQuery = false, brands = [], specs = [] } = Astro.props as {
   products: ProductEntry[];
+  designs?: EtsyDesign[];
   showQuery?: boolean;
   brands?: string[];
   specs?: string[];
@@ -16,6 +18,7 @@ const { products, showQuery = false, brands = [], specs = [] } = Astro.props as 
       <noscript><p class="form-note">Filters and sorting use JavaScript. Every listing in this set is shown below.</p></noscript>
       <div class="grid cards" data-grid>
         {products.map((product) => <ProductCard product={product} />)}
+        <EtsyCards designs={designs} />
       </div>
       <p class="empty" data-empty hidden>Nothing matches those filters.</p>
     </div>

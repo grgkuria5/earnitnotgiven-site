@@ -1,0 +1,28 @@
+---
+import { money } from '../lib/pure';
+import type { EtsyDesign } from '../lib/site';
+const { designs } = Astro.props as { designs: EtsyDesign[] };
+---
+{designs.map((design) => (
+  <article
+    class="card"
+    data-item
+    data-title={design.title}
+    data-price={design.price ?? 0}
+    data-condition="New"
+    data-type="physical"
+    data-digital="false"
+    data-featured="0"
+    data-brand="EarnItNotGiven"
+    data-search={`${design.title} ${design.tags.join(' ')} etsy`.toLowerCase()}
+  >
+    <a href={design.url} rel="noopener noreferrer" target="_blank">
+      {design.image ? <img src={design.image} alt="" width="800" height="600" /> : <div class="ph"></div>}
+    </a>
+    <h3><a href={design.url} rel="noopener noreferrer" target="_blank">{design.title}</a></h3>
+    <p class="meta muted">Etsy · EarnItNotGiven</p>
+    {design.price !== null && <p class="price">From {money(design.price)}</p>}
+    {design.ai && <p class="ai-note">Made with AI assistance</p>}
+    <p class="meta"><a class="btn btn-gold" href={design.url} rel="noopener noreferrer" target="_blank">View on Etsy</a></p>
+  </article>
+))}

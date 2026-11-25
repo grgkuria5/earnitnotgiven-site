@@ -304,6 +304,41 @@ def read_local_windows() -> dict:
     return json.loads(completed.stdout)
 
 
+def ocr_label(image_path: str) -> dict:
+    path = Path(image_path).expanduser()
+    if image_path.strip().upper().startswith("SAMPLE"):
+        return {"ok": False, "text": "", "message": "SAMPLE is not a photo. No text was invented."}
+    if not path.is_file():
+        return {"ok": False, "text": "", "message": "No photo at that path. Nothing was read."}
+    if path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff", ".bmp"}:
+        return {"ok": False, "text": "", "message": "That file is not a photo."}
+    if not shutil.which("tesseract"):
+        return {"ok": False, "text": "", "message": "Tesseract is not installed on this PC. No text was invented from the photo."}
+    completed = subprocess.run(["tesseract", str(path), "stdout"], capture_output=True, text=True, timeout=40, check=False)
+    if completed.returncode != 0:
+        return {"ok": False, "text": "", "message": (completed.stderr or "Tesseract could not read that photo.")[-300:]}
+    return {"ok": True, "text": completed.stdout.strip(), "message": "Text read from the photo on this PC."}
+
+
+def import_iphone_photos(tag: str) -> dict:
+    import sys
+    script = Path(__file__).resolve().parent / "scripts" / "import-iphone-photos.ps1"
+    if sys.platform != "win32":
+        return {"ok": False, "message": "iPhone import runs on the Windows PC with the phone plugged in. Nothing was copied.", "script": str(script)}
+    if tag.upper().startswith("SAMPLE"):
+        return {"ok": False, "message": "SAMPLE is not a real tag. Nothing was copied."}
+    completed = subprocess.run(
+        ["powershell", "-NoProfile", "-File", str(script), "-Tag", tag],
+        capture_output=True,
+        text=True,
+        timeout=120,
+        check=False,
+    )
+    if completed.returncode != 0:
+        return {"ok": False, "message": (completed.stderr or "The iPhone copy did not finish.")[-300:]}
+    return {"ok": True, "message": completed.stdout.strip() or "Copy finished."}
+
+
 def read_android_adb() -> dict:
     if not shutil.which("adb"):
         raise RuntimeError("adb is not installed. It is optional. Install platform-tools and enable USB debugging, then try again.")

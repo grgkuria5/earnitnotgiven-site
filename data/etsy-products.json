@@ -1,3 +1,556 @@
 {
-  "products": []
+  "products": [
+    {
+      "title": "Jet Badge V-Neck Tee - Earn It Not Given - White Suit Stage Back (Circle)",
+      "etsy_listing_id": "4607240761",
+      "etsy_url": "https://www.etsy.com/listing/4607240761",
+      "from_price_usd": 29.99,
+      "image": "https://images.printify.com/mockup/6ae6655a1194fd37ca05d9df/23766/111735/jet-badge-v-neck-tee-earn-it-not-given-white-suit-stage-back-circle.jpg?camera_label=front",
+      "tags": [],
+      "category": "clothing",
+      "subcategory": "tees"
+    },
+    {
+      "title": "Jet Panel V-Neck Tee - Earn It Not Given - White Suit Stage Back (Rounded)",
+      "etsy_listing_id": "4607262826",
+      "etsy_url": "https://www.etsy.com/listing/4607262826",
+      "from_price_usd": 29.99,
+      "image": "https://images.printify.com/mockup/6ae6655854fa3d36d60bff19/23766/111735/jet-panel-v-neck-tee-earn-it-not-given-white-suit-stage-back-rounded.jpg?camera_label=front",
+      "tags": [],
+      "category": "clothing",
+      "subcategory": "tees"
+    },
+    {
+      "title": "Kenya Flag Bomber Jacket, Dog Portrait Satin-Look Jacket, Charcoal Black, Gold Stripes, Limited Edition Unisex Streetwear",
+      "etsy_listing_id": "4607229177",
+      "etsy_url": "https://www.etsy.com/listing/4607229177",
+      "from_price_usd": 110.0,
+      "image": "https://images.printify.com/mockup/6ae65fa2f0376f20c40d3886/62179/3479/kenya-flag-bomber-jacket-dog-portrait-satin-look-jacket-charcoal-black-gold-stripes-limited-edition-unisex-streetwear.jpg?camera_label=front",
+      "tags": [
+        "kenya flag jacket",
+        "bomber jacket",
+        "kenyan pride",
+        "custom dog jacket",
+        "dog lover gift",
+        "satin bomber",
+        "african jacket",
+        "limited edition"
+      ],
+      "category": "clothing",
+      "subcategory": "jackets"
+    },
+    {
+      "title": "Kenya Flag Bomber Jacket, Dog Portrait Satin-Look Jacket, Midnight Navy, Gold Stripes, Limited Edition Unisex Streetwear",
+      "etsy_listing_id": "4607250936",
+      "etsy_url": "https://www.etsy.com/listing/4607250936",
+      "from_price_usd": 110.0,
+      "image": "https://images.printify.com/mockup/6ae65f951194fd37ca05d5eb/62179/3479/kenya-flag-bomber-jacket-dog-portrait-satin-look-jacket-midnight-navy-gold-stripes-limited-edition-unisex-streetwear.jpg?camera_label=front",
+      "tags": [
+        "kenya flag jacket",
+        "bomber jacket",
+        "kenyan pride",
+        "custom dog jacket",
+        "dog lover gift",
+        "satin bomber",
+        "african jacket",
+        "limited edition"
+      ],
+      "category": "clothing",
+      "subcategory": "jackets"
+    },
+    {
+      "title": "Kenya Flag Bomber Jacket, Dog Portrait Satin-Look Jacket, White, Gold Stripes, Limited Edition Unisex Streetwear",
+      "etsy_listing_id": "4607228569",
+      "etsy_url": "https://www.etsy.com/listing/4607228569",
+      "from_price_usd": 110.0,
+      "image": "https://images.printify.com/mockup/6ae65f8888325bfb8908fbda/62179/3479/kenya-flag-bomber-jacket-dog-portrait-satin-look-jacket-white-gold-stripes-limited-edition-unisex-streetwear.jpg?camera_label=front",
+      "tags": [
+        "kenya flag jacket",
+        "bomber jacket",
+        "kenyan pride",
+        "custom dog jacket",
+        "dog lover gift",
+        "satin bomber",
+        "african jacket",
+        "limited edition"
+      ],
+      "category": "clothing",
+      "subcategory": "jackets"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Cream Off-White",
+      "etsy_listing_id": "4607149314",
+      "etsy_url": "https://www.etsy.com/listing/4607149314",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62eeaa19cfe3c6e05edaf/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-cream-off-white.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Mocha Brown",
+      "etsy_listing_id": "4607148796",
+      "etsy_url": "https://www.etsy.com/listing/4607148796",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62ecd8d88cb436d0c2ea9/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-mocha-brown.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Butter Yellow",
+      "etsy_listing_id": "4607148272",
+      "etsy_url": "https://www.etsy.com/listing/4607148272",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62eb054fa3d36d60bd6fc/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-butter-yellow.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Coral",
+      "etsy_listing_id": "4607126051",
+      "etsy_url": "https://www.etsy.com/listing/4607126051",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62e94256dbc082b0ef66b/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-coral.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Lavender",
+      "etsy_listing_id": "4607125407",
+      "etsy_url": "https://www.etsy.com/listing/4607125407",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62e75d852d7530e020eb0/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-lavender.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Raspberry Pink",
+      "etsy_listing_id": "4607124835",
+      "etsy_url": "https://www.etsy.com/listing/4607124835",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62e59c9ed9f597505333c/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-raspberry-pink.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Dusty Rose Pink",
+      "etsy_listing_id": "4607124391",
+      "etsy_url": "https://www.etsy.com/listing/4607124391",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62e3e1194fd37ca05b30b/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-dusty-rose-pink.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Mauve",
+      "etsy_listing_id": "4607123793",
+      "etsy_url": "https://www.etsy.com/listing/4607123793",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62e23c840682a150fc9c7/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-mauve.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Wine Red",
+      "etsy_listing_id": "4607145000",
+      "etsy_url": "https://www.etsy.com/listing/4607145000",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62e0609e2bd18a502f9d8/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-wine-red.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Burgundy",
+      "etsy_listing_id": "4607122655",
+      "etsy_url": "https://www.etsy.com/listing/4607122655",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62de909e2bd18a502f9bc/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-burgundy.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Sage Green",
+      "etsy_listing_id": "4607143910",
+      "etsy_url": "https://www.etsy.com/listing/4607143910",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62dcdc840682a150fc987/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-sage-green.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Emerald Green",
+      "etsy_listing_id": "4607143464",
+      "etsy_url": "https://www.etsy.com/listing/4607143464",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62db309e2bd18a502f99f/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-emerald-green.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Forest Green",
+      "etsy_listing_id": "4607121035",
+      "etsy_url": "https://www.etsy.com/listing/4607121035",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d9754fa3d36d60bd649/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-forest-green.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Deep Teal",
+      "etsy_listing_id": "4607142432",
+      "etsy_url": "https://www.etsy.com/listing/4607142432",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d7954fa3d36d60bd624/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-deep-teal.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Dusty Blue",
+      "etsy_listing_id": "4607141944",
+      "etsy_url": "https://www.etsy.com/listing/4607141944",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d5e08e818c1240fb1de/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-dusty-blue.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Cobalt Blue",
+      "etsy_listing_id": "4607141416",
+      "etsy_url": "https://www.etsy.com/listing/4607141416",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d46256dbc082b0ef572/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-cobalt-blue.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Midnight Navy",
+      "etsy_listing_id": "4607140936",
+      "etsy_url": "https://www.etsy.com/listing/4607140936",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d28c840682a150fc929/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-midnight-navy.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Slate Gray",
+      "etsy_listing_id": "4607140394",
+      "etsy_url": "https://www.etsy.com/listing/4607140394",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d27d852d7530e020dd0/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-slate-gray.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Charcoal",
+      "etsy_listing_id": "4607116613",
+      "etsy_url": "https://www.etsy.com/listing/4607116613",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d2509e2bd18a502f929/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-charcoal.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "High Waisted Leggings for Women, Silky Smooth Buttery Soft 4-Way Stretch Tummy Control Yoga Pants, Black",
+      "etsy_listing_id": "4607114979",
+      "etsy_url": "https://www.etsy.com/listing/4607114979",
+      "from_price_usd": 54.99,
+      "image": "https://images.printify.com/mockup/6ae62d24a3425a04b8006746/67987/7991/high-waisted-leggings-for-women-silky-smooth-buttery-soft-4-way-stretch-tummy-control-yoga-pants-black.jpg?camera_label=front",
+      "tags": [
+        "high waisted leggings",
+        "womens leggings",
+        "yoga pants",
+        "tummy control",
+        "workout leggings",
+        "gym leggings",
+        "buttery soft",
+        "4 way stretch"
+      ],
+      "category": "clothing",
+      "subcategory": "leggings"
+    },
+    {
+      "title": "Sleeping Fox Nursery Wall Art Poster, Woodland Moon and Stars Print, Gender Neutral Baby Room Decor, Matte Poster for Kids Room",
+      "etsy_listing_id": "4607151426",
+      "etsy_url": "https://www.etsy.com/listing/4607151426",
+      "from_price_usd": 29.99,
+      "image": "https://images.printify.com/mockup/6ae62b1f1194fd37ca05b074/43135/94677/sleeping-fox-nursery-wall-art-poster-woodland-moon-and-stars-print-gender-neutral-baby-room-decor-matte-poster-for-kids-room.jpg?camera_label=front",
+      "tags": [
+        "nursery wall art",
+        "fox nursery print",
+        "woodland nursery",
+        "baby room decor",
+        "moon and stars",
+        "gender neutral baby",
+        "nursery decor",
+        "kids room art"
+      ],
+      "category": "wall-art",
+      "subcategory": ""
+    },
+    {
+      "title": "Minimalist Line Art Poster, One Line Vases with Terracotta Sun, Modern Neutral Wall Art Print, Matte Poster for Living Room Office",
+      "etsy_listing_id": "4607129579",
+      "etsy_url": "https://www.etsy.com/listing/4607129579",
+      "from_price_usd": 29.99,
+      "image": "https://images.printify.com/mockup/6ae62af1c840682a150fc702/43135/94677/minimalist-line-art-poster-one-line-vases-with-terracotta-sun-modern-neutral-wall-art-print-matte-poster-for-living-room-office.jpg?camera_label=front",
+      "tags": [
+        "line art print",
+        "one line art",
+        "minimalist art",
+        "vase line art",
+        "terracotta decor",
+        "modern wall art",
+        "neutral wall decor",
+        "scandi wall art"
+      ],
+      "category": "wall-art",
+      "subcategory": ""
+    },
+    {
+      "title": "Boho Eucalyptus Pampas Grass Wall Art Poster, Terracotta Arch Print, Neutral Botanical Decor, Matte Poster for Living Room Bedroom",
+      "etsy_listing_id": "4607129505",
+      "etsy_url": "https://www.etsy.com/listing/4607129505",
+      "from_price_usd": 29.99,
+      "image": "https://images.printify.com/mockup/6ae62aefc840682a150fc700/43135/94677/boho-eucalyptus-pampas-grass-wall-art-poster-terracotta-arch-print-neutral-botanical-decor-matte-poster-for-living-room-bedroom.jpg?camera_label=front",
+      "tags": [
+        "boho wall art",
+        "eucalyptus print",
+        "pampas grass art",
+        "terracotta arch",
+        "boho botanical",
+        "neutral wall decor",
+        "boho home decor",
+        "watercolor botanical"
+      ],
+      "category": "wall-art",
+      "subcategory": ""
+    },
+    {
+      "title": "We The Force Tee, Stealth Jet Leather Look Graphic Shirt, Aviation Gift, Comfort Colors Garment Dyed T-Shirt",
+      "etsy_listing_id": "4607064438",
+      "etsy_url": "https://www.etsy.com/listing/4607064438",
+      "from_price_usd": 32.99,
+      "image": "https://images.printify.com/mockup/6ae6113b98e93c297b0e7f20/78973/98445/we-the-force-tee-stealth-jet-leather-look-graphic-shirt-aviation-gift-comfort-colors-garment-dyed-t-shirt.jpg?camera_label=front",
+      "tags": [
+        "stealth jet shirt",
+        "aviation gift",
+        "pilot gift",
+        "aviation tshirt",
+        "jet graphic tee",
+        "leather look shirt",
+        "comfort colors tee",
+        "airplane lover gift"
+      ],
+      "category": "clothing",
+      "subcategory": "tees"
+    },
+    {
+      "title": "Andromeda Galaxy Wall Art Poster, Space Print, Night Sky Astronomy Decor, Spiral Galaxy Cosmos Art, Matte Poster for Bedroom Office",
+      "etsy_listing_id": "4607006316",
+      "etsy_url": "https://www.etsy.com/listing/4607006316",
+      "from_price_usd": 29.99,
+      "image": "https://images.printify.com/mockup/6ae5f871c9ed9f59750500b9/43135/94677/andromeda-galaxy-wall-art-poster-space-print-night-sky-astronomy-decor-spiral-galaxy-cosmos-art-matte-poster-for-bedroom-office.jpg?camera_label=front",
+      "tags": [
+        "galaxy poster",
+        "space wall art",
+        "andromeda galaxy",
+        "astronomy print",
+        "cosmos wall decor",
+        "night sky poster",
+        "space room decor",
+        "spiral galaxy art"
+      ],
+      "category": "wall-art",
+      "subcategory": ""
+    }
+  ]
 }

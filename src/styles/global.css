@@ -132,7 +132,12 @@ p { margin: 0 0 0.8em; }
 .topbar, .nav-row { display: flex; align-items: center; gap: 0.8rem; }
 .topbar { padding: 0.75rem 0; }
 .logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; color: inherit; min-height: 44px; }
-.logo svg { width: 42px; height: 42px; flex: none; }
+.logo img {
+  height: 56px;
+  width: auto;
+  flex: none;
+  filter: drop-shadow(0 0 8px rgba(214, 176, 96, 0.32));
+}
 .logo strong { display: block; font-family: Syne, sans-serif; letter-spacing: 0.08em; font-size: 0.92rem; color: var(--gold-2); }
 .logo span { display: block; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .search { flex: 1; display: flex; gap: 0.4rem; min-width: 0; }
@@ -225,7 +230,14 @@ label.field { display: grid; gap: 0.35rem; font-weight: 620; }
 .btn-ghost:hover { color: white; border-color: var(--section-accent); }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
-.hero { padding: 2.5rem 0 1.5rem; display: grid; gap: 1.5rem; }
+.hero { padding: 2.5rem 0 1.5rem; display: grid; gap: 1.5rem; align-items: center; }
+.hero-mark { margin: 0; display: grid; justify-items: center; }
+.hero-mark img {
+  width: min(100%, 280px);
+  height: auto;
+  filter: drop-shadow(0 0 22px rgba(214, 176, 96, 0.4)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.4));
+}
+.hero .panel { margin-top: 1.25rem; }
 .hero h1 { font-size: clamp(2.4rem, 6vw, 4.6rem); max-width: 14ch; }
 .hero p.lede { font-size: 1.15rem; max-width: 42rem; color: var(--muted); }
 .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
@@ -415,7 +427,9 @@ label.field { display: grid; gap: 0.35rem; font-weight: 620; }
 
 @media (min-width: 720px) {
   .grid.cards, .grid.services, .cats-grid, .trust-strip ul { grid-template-columns: repeat(2, 1fr); }
-  .hero { grid-template-columns: 1.4fr 0.8fr; align-items: end; }
+  .hero { grid-template-columns: minmax(280px, 400px) 1fr; align-items: center; }
+  .hero-mark { justify-items: start; }
+  .hero-mark img { width: min(100%, 380px); }
   .product { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
   .layout { grid-template-columns: 240px 1fr; align-items: start; }
   .foot-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; }

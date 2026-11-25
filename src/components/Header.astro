@@ -1,5 +1,4 @@
 ---
-import Mark from './Mark.astro';
 import CatIcon from './CatIcon.astro';
 import { activeBanners, visibleCategories } from '../lib/site';
 const { path = '/' } = Astro.props;
@@ -19,11 +18,13 @@ const menu = visibleCategories();
 <header class="site-header">
   <div class="wrap topbar">
     <a class="logo" href="/">
-      <Mark />
-      <span>
-        <strong>EARN IT</strong>
-        <span>Not Given</span>
-      </span>
+      <img
+        src="/images/logo-mark.png"
+        srcset="/images/logo-mark.png 1x, /images/logo-mark@2x.png 2x"
+        alt="Earn It Not Given"
+        width="64"
+        height="52"
+      />
     </a>
     <form class="search" action="/search" method="get" role="search">
       <label class="sr-only" for="site-q">Search products</label>

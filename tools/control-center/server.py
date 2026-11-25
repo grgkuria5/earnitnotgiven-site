@@ -422,7 +422,7 @@ PAGE = """<!doctype html>
       guides: `<form data-tool="guide" class="card"><h2>Guide draft</h2><input name="topic" placeholder="Topic" /><button class="gold" type="submit">Draft a guide</button></form>`,
       ship: `<div class="card"><h2>Ship checklist and low stock</h2><div id="stock"></div><form data-tool="checklist"><button class="gold" type="submit">Draft the checklist</button></form></div>`,
       sync: `<form data-tool="sync" class="card"><h2>Description sync suggestions</h2><textarea name="notes" rows="5" placeholder="Paste an Etsy description and the site description"></textarea><button class="gold" type="submit">Draft suggestions</button></form>`,
-      spec: `<div class="card"><h2>Spec Checker</h2><p class="muted">Opens the maker’s own page. It does not scrape it. Sample row is not a real machine.</p><label>Lookup<select id="spec-provider">${specProviders.map(p => `<option value="${p.id}">${p.group}: ${p.label}</option>`).join("")}</select></label><label>Tag, serial, model, IMEI, or UPC<input id="spec-id" value="SAMPLE7X" /></label><button class="gold" type="button" id="spec-go">Open official page</button><pre id="spec-out" class="muted">SAMPLE suggestion for Dell: category computers / laptops. Support URL is Dell’s service-tag page.</pre></div>`,
+      spec: `<div class="card"><h2>Spec Checker</h2><p class="muted">Opens the maker’s own page. It does not scrape it. WMI, OCR, and the iPhone copy run on this PC only.</p><label>Lookup<select id="spec-provider">${specProviders.map(p => `<option value="${p.id}">${p.group}: ${p.label}</option>`).join("")}</select></label><label>Tag, serial, model, IMEI, UPC, or photo path<input id="spec-id" value="SAMPLE7X" /></label><p><button class="gold" type="button" id="spec-go">Open official page</button> <button class="ghost" type="button" id="spec-wmi">Read this PC (WMI)</button> <button class="ghost" type="button" id="spec-ocr">Read a label photo</button> <button class="ghost" type="button" id="spec-phone">Import iPhone photos</button> <button class="ghost" type="button" id="spec-upc">Look up UPC</button></p><pre id="spec-out" class="muted">SAMPLE suggestion for Dell: category computers / laptops. Support URL is Dell’s service-tag page.</pre></div>`,
       labels: `<div class="card sample"><h2>Shipping Station</h2><p class="banner">SAMPLE DATA. Buy label will not purchase anything.</p><p>Order SAMPLE-1001 · Sample Buyer · Palo Alto, CA · customer paid shipping</p><p>Parcel preset: 8 oz, 10 x 8 x 1 in</p><table><tr><th>Carrier</th><th>Service</th><th>Rate</th></tr><tr><td>USPS</td><td>Ground Advantage</td><td>$6.40</td></tr><tr><td>UPS</td><td>Ground</td><td>$9.15</td></tr></table><p><a class="link" href="/packing-slip/sample" target="_blank">Open sample packing slip</a></p><form id="buy-form"><input type="hidden" name="rate_id" value="SAMPLE-USPS" /><button class="gold" type="submit">Buy label</button></form><p id="buy-note" class="muted">One click buys a real label only when a carrier key is set and the rate is under your caps. Auto-buy is off.</p></div>`,
       sales: `<div class="card sample"><h2>Sales</h2><p class="banner">SAMPLE DATA — not your shop. Connect Etsy to replace it.</p><p><a class="link" href="/auth/start">Connect Etsy</a> <a class="link" href="/export.csv">Export CSV</a></p><table><thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead><tbody>${sampleOrders.map(row => `<tr><td>${row.id}<br>${row.title}</td><td>${row.status}</td><td>$${row.total.toFixed(2)}</td></tr>`).join("")}</tbody></table><form id="ship-form"><h3>Mark shipped</h3><input name="receipt_id" value="SAMPLE-1001" /><input name="carrier" value="usps" /><input name="tracking" placeholder="Tracking number" /><label><input type="checkbox" name="confirm" value="yes" /> I mean to send this to Etsy</label><button class="gold" type="submit">Submit tracking</button><p id="ship-note" class="muted"></p></form><form id="manual"><h3>Log a site order</h3><input name="title" placeholder="Title" /><input name="total" placeholder="Total" /><button class="ghost" type="submit">Save locally</button></form></div>`
     };
@@ -440,13 +440,23 @@ PAGE = """<!doctype html>
         note.textContent = body.message || body.error || "Saved a draft.";
         form.append(note);
       }));
-      const specGo = document.querySelector("#spec-go");
-      if (specGo) specGo.addEventListener("click", async () => {
-        const res = await fetch("/api/spec/lookup", {method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({provider: document.querySelector("#spec-provider").value, identifier: document.querySelector("#spec-id").value})});
+      async function specCall(url, extra) {
+        const identifier = document.querySelector("#spec-id").value;
+        const res = await fetch(url, {method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({provider: document.querySelector("#spec-provider").value, identifier, ...extra})});
         const body = await res.json();
         document.querySelector("#spec-out").textContent = JSON.stringify(body, null, 2);
         if (body.links && body.links[0]) window.open(body.links[0].url, "_blank", "noopener");
-      });
+      }
+      const specGo = document.querySelector("#spec-go");
+      if (specGo) specGo.addEventListener("click", () => specCall("/api/spec/lookup", {}));
+      const specWmi = document.querySelector("#spec-wmi");
+      if (specWmi) specWmi.addEventListener("click", () => specCall("/api/spec/wmi", {}));
+      const specOcr = document.querySelector("#spec-ocr");
+      if (specOcr) specOcr.addEventListener("click", () => specCall("/api/spec/ocr", {path: document.querySelector("#spec-id").value}));
+      const specPhone = document.querySelector("#spec-phone");
+      if (specPhone) specPhone.addEventListener("click", () => specCall("/api/spec/iphone", {tag: document.querySelector("#spec-id").value}));
+      const specUpc = document.querySelector("#spec-upc");
+      if (specUpc) specUpc.addEventListener("click", () => specCall("/api/spec/upc", {code: document.querySelector("#spec-id").value}));
       const buy = document.querySelector("#buy-form");
       if (buy) buy.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -708,8 +718,36 @@ class Handler(BaseHTTPRequestHandler):
                 record["cached"] = bool(cached)
             self._json(200, record)
             return
+        if path == "/api/spec/wmi":
+            from spec_checker import read_local_windows, suggest_category
+            try:
+                record = read_local_windows()
+            except RuntimeError as exc:
+                self._json(200, {"ok": False, "message": str(exc)})
+                return
+            record["suggestion"] = suggest_category("dell")
+            self._json(200, record)
+            return
+        if path == "/api/spec/ocr":
+            from spec_checker import ocr_label
+            self._json(200, ocr_label(str(payload.get("path") or payload.get("identifier") or "")))
+            return
+        if path == "/api/spec/iphone":
+            from spec_checker import import_iphone_photos
+            self._json(200, import_iphone_photos(str(payload.get("tag") or payload.get("identifier") or "")))
+            return
+        if path == "/api/spec/upc":
+            from spec_checker import lookup_upc, suggest_category
+            code = str(payload.get("code") or payload.get("identifier") or "")
+            if code.upper().startswith("SAMPLE"):
+                self._json(200, {"ok": False, "message": "SAMPLE is not a barcode. No lookup was sent."})
+                return
+            found = lookup_upc(code, APP.env.get("UPCITEMDB_KEY", ""))
+            found["suggestion"] = suggest_category("upc")
+            self._json(200, found)
+            return
         if path == "/api/shipping/buy":
-            from shipping_station import append_log, buy_label, decide, load_settings
+            from shipping_station import append_log, buy_label, decide, fulfill_after_purchase, load_settings
             settings = load_settings()
             sample = bool(payload.get("sample")) or str(payload.get("rate_id") or "").startswith("SAMPLE")
             allowed, reason = decide(
@@ -724,8 +762,41 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, {"message": reason, "purchased": False})
                 return
             result = buy_label(APP.env, str(payload.get("rate_id") or ""), str(settings.get("label_format") or "PDF"))
-            append_log({"action": "purchased" if result.get("ok") else "refused", "amount": payload.get("amount"), "reason": result.get("message"), "rate_id": payload.get("rate_id")})
-            self._json(200, {"message": result.get("message"), "purchased": bool(result.get("ok"))})
+            if not result.get("ok"):
+                append_log({"action": "refused", "amount": payload.get("amount"), "reason": result.get("message"), "rate_id": payload.get("rate_id")})
+                self._json(200, {"message": result.get("message"), "purchased": False})
+                return
+            raw = payload.get("shipment") if isinstance(payload.get("shipment"), dict) else {}
+            shipment = {
+                "sample": False,
+                "order_id": str(raw.get("order_id") or payload.get("order_id") or "order"),
+                "source": str(raw.get("source") or payload.get("source") or ""),
+                "to_name": str(raw.get("to_name") or payload.get("to_name") or ""),
+                "to_street": str(raw.get("to_street") or ""),
+                "to_city": str(raw.get("to_city") or ""),
+                "to_state": str(raw.get("to_state") or ""),
+                "to_zip": str(raw.get("to_zip") or ""),
+                "items": raw.get("items") if isinstance(raw.get("items"), list) else [],
+                "note": str(raw.get("note") or ""),
+                "personal_note": str(raw.get("personal_note") or ""),
+            }
+            result["carrier"] = result.get("carrier") or str(payload.get("carrier") or "USPS")
+            done = fulfill_after_purchase(shipment, settings, result)
+            etsy_note = ""
+            if "etsy" in shipment["source"].lower():
+                if result.get("tracking"):
+                    sent = APP.ship({
+                        "receipt_id": shipment["order_id"],
+                        "confirm": "yes",
+                        "tracking": result.get("tracking"),
+                        "carrier": str(payload.get("carrier") or "usps"),
+                    })
+                    etsy_note = sent.get("message") or sent.get("error") or ""
+                else:
+                    etsy_note = "Etsy was not updated because the label had no tracking number."
+            append_log({"action": "purchased", "amount": payload.get("amount"), "reason": result.get("message"), "rate_id": payload.get("rate_id"), "email_draft": done.get("email_draft")})
+            message = " ".join(part for part in (result.get("message"), done.get("printed"), done.get("note"), etsy_note) if part)
+            self._json(200, {"message": message, "purchased": True, "email_draft": done.get("email_draft")})
             return
         if path == "/api/ship":
             self._json(200, APP.ship(payload))

@@ -160,6 +160,68 @@ def base64_basic(api_key: str) -> str:
     return base64.b64encode(f"{api_key}:".encode()).decode()
 
 
+def fulfill_after_purchase(shipment: dict, settings: dict, label: dict) -> dict:
+    """Save the label, packing slip, and an unsent email. Print only on Windows."""
+    import sys
+    order = str(shipment.get("order_id") or "order").replace("/", "-")
+    folder = DATA / "labels"
+    folder.mkdir(parents=True, exist_ok=True)
+    label_format = str(settings.get("label_format") or "PDF")
+    suffix = "zpl" if label_format.upper() == "ZPL" else "pdf"
+    label_path = folder / f"{order}-label.{suffix}"
+    body = label.get("label_bytes")
+    if isinstance(body, (bytes, bytearray)) and body:
+        label_path.write_bytes(body)
+    elif label.get("label_url"):
+        import urllib.request
+        try:
+            with urllib.request.urlopen(label["label_url"], timeout=45) as response:
+                label_path.write_bytes(response.read())
+        except OSError as exc:
+            label_path.write_text(f"Label URL was not downloaded: {exc}\n{label.get('label_url')}\n", encoding="utf-8")
+    slip_path = folder / f"{order}-packing-slip.html"
+    slip_path.write_text(packing_slip_html(shipment, settings), encoding="utf-8")
+    drafts = ROOT / "drafts"
+    drafts.mkdir(parents=True, exist_ok=True)
+    email_path = drafts / f"tracking-{order}.txt"
+    email_path.write_text(
+        tracking_email_draft(shipment, str(label.get("tracking") or ""), str(label.get("carrier") or "USPS")),
+        encoding="utf-8",
+    )
+    printed = _print_saved(settings, label_path, slip_path, label_format)
+    return {
+        "label_file": str(label_path),
+        "slip_file": str(slip_path),
+        "email_draft": str(email_path),
+        "printed": printed,
+        "note": "The customer email is a draft. It was not sent.",
+    }
+
+
+def _print_saved(settings: dict, label_path: Path, slip_path: Path, label_format: str) -> str:
+    import sys
+    if sys.platform != "win32":
+        return "Files saved. Printing runs on the Windows PC named in shipping settings."
+    script = ROOT / "scripts" / "print-label.ps1"
+    notes = []
+    for path, printer, fmt in (
+        (label_path, settings.get("label_printer") or "", label_format),
+        (slip_path, settings.get("slip_printer") or "", "PDF"),
+    ):
+        if not printer:
+            notes.append(f"No printer name set for {path.name}.")
+            continue
+        completed = __import__("subprocess").run(
+            ["powershell", "-NoProfile", "-File", str(script), "-Path", str(path), "-PrinterName", str(printer), "-Format", "ZPL" if fmt.upper() == "ZPL" else "PDF"],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        notes.append("Printed." if completed.returncode == 0 else (completed.stderr or "Print failed.")[-200:])
+    return " ".join(notes)
+
+
 def tracking_email_draft(shipment: dict, tracking: str, carrier: str) -> str:
     return (
         f"DRAFT — not sent\n"

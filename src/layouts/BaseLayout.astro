@@ -39,7 +39,6 @@ const csp = `${await contentSecurityPolicy().then((policy) => policy.replace("sc
     <meta property="og:image" content={new URL(image, SITE).toString()} />
     <meta property="og:site_name" content="Earn It Not Given" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch.png" />
     {settings.google_site_verification && <meta name="google-site-verification" content={settings.google_site_verification} />}
