@@ -77,6 +77,13 @@ def load_env() -> dict[str, str]:
         "PRINTIFY_TOKEN",
         "GITHUB_TOKEN",
         "GITHUB_REPO",
+        "SHIPPO_API_KEY",
+        "EASYPOST_API_KEY",
+        "SHIPSTATION_API_KEY",
+        "SHIPSTATION_API_SECRET",
+        "STRIPE_SECRET_KEY",
+        "PAYPAL_CLIENT_ID",
+        "PAYPAL_CLIENT_SECRET",
     ):
         if os.environ.get(key):
             env[key] = os.environ[key]
@@ -399,6 +406,7 @@ PAGE = """<!doctype html>
       <button class="ghost" type="button" data-tab="ship">Ship</button>
       <button class="ghost" type="button" data-tab="sync">Sync ideas</button>
       <button class="ghost" type="button" data-tab="sales">Sales</button>
+      <button class="ghost" type="button" data-tab="labels">Shipping Station</button>
     </nav>
     <section id="panel" class="grid"></section>
   </main>
@@ -412,6 +420,7 @@ PAGE = """<!doctype html>
       guides: `<form data-tool="guide" class="card"><h2>Guide draft</h2><input name="topic" placeholder="Topic" /><button class="gold" type="submit">Draft a guide</button></form>`,
       ship: `<div class="card"><h2>Ship checklist and low stock</h2><div id="stock"></div><form data-tool="checklist"><button class="gold" type="submit">Draft the checklist</button></form></div>`,
       sync: `<form data-tool="sync" class="card"><h2>Description sync suggestions</h2><textarea name="notes" rows="5" placeholder="Paste an Etsy description and the site description"></textarea><button class="gold" type="submit">Draft suggestions</button></form>`,
+      labels: `<div class="card sample"><h2>Shipping Station</h2><p class="banner">SAMPLE DATA. Buy label will not purchase anything.</p><p>Order SAMPLE-1001 · Sample Buyer · Palo Alto, CA · customer paid shipping</p><p>Parcel preset: 8 oz, 10 x 8 x 1 in</p><table><tr><th>Carrier</th><th>Service</th><th>Rate</th></tr><tr><td>USPS</td><td>Ground Advantage</td><td>$6.40</td></tr><tr><td>UPS</td><td>Ground</td><td>$9.15</td></tr></table><p><a class="link" href="/packing-slip/sample" target="_blank">Open sample packing slip</a></p><form id="buy-form"><input type="hidden" name="rate_id" value="SAMPLE-USPS" /><button class="gold" type="submit">Buy label</button></form><p id="buy-note" class="muted">One click buys a real label only when a carrier key is set and the rate is under your caps. Auto-buy is off.</p></div>`,
       sales: `<div class="card sample"><h2>Sales</h2><p class="banner">SAMPLE DATA — not your shop. Connect Etsy to replace it.</p><p><a class="link" href="/auth/start">Connect Etsy</a> <a class="link" href="/export.csv">Export CSV</a></p><table><thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead><tbody>${sampleOrders.map(row => `<tr><td>${row.id}<br>${row.title}</td><td>${row.status}</td><td>$${row.total.toFixed(2)}</td></tr>`).join("")}</tbody></table><form id="ship-form"><h3>Mark shipped</h3><input name="receipt_id" value="SAMPLE-1001" /><input name="carrier" value="usps" /><input name="tracking" placeholder="Tracking number" /><label><input type="checkbox" name="confirm" value="yes" /> I mean to send this to Etsy</label><button class="gold" type="submit">Submit tracking</button><p id="ship-note" class="muted"></p></form><form id="manual"><h3>Log a site order</h3><input name="title" placeholder="Title" /><input name="total" placeholder="Total" /><button class="ghost" type="submit">Save locally</button></form></div>`
     };
     const panel = document.querySelector("#panel");
@@ -428,6 +437,13 @@ PAGE = """<!doctype html>
         note.textContent = body.message || body.error || "Saved a draft.";
         form.append(note);
       }));
+      const buy = document.querySelector("#buy-form");
+      if (buy) buy.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const res = await fetch("/api/shipping/buy", {method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({rate_id:"SAMPLE-USPS", amount:6.4, sample:true, auto:false, customer_paid_shipping:true})});
+        const body = await res.json();
+        document.querySelector("#buy-note").textContent = body.message || body.error;
+      });
       const ship = document.querySelector("#ship-form");
       if (ship) ship.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -559,6 +575,12 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/stock":
             self._json(200, {"items": low_stock()})
             return
+        if path in {"/packing-slip", "/packing-slip/sample"}:
+            from shipping_station import SAMPLE_SHIPMENT, load_settings, packing_slip_html
+            shipment = dict(SAMPLE_SHIPMENT)
+            shipment["personal_note"] = "SAMPLE note: hope the tee earns its place in the rotation."
+            self._send(200, packing_slip_html(shipment, load_settings()).encode(), "text/html; charset=utf-8")
+            return
         if path == "/export.csv":
             buf = io.StringIO()
             writer = csv.DictWriter(buf, fieldnames=["id", "source", "status", "title", "buyer", "total", "created", "sample"])
@@ -657,6 +679,25 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self._json(200, {"message": message})
             return
+        if path == "/api/shipping/buy":
+            from shipping_station import append_log, buy_label, decide, load_settings
+            settings = load_settings()
+            sample = bool(payload.get("sample")) or str(payload.get("rate_id") or "").startswith("SAMPLE")
+            allowed, reason = decide(
+                float(payload.get("amount") or 0),
+                settings,
+                auto=bool(payload.get("auto")),
+                customer_paid_shipping=bool(payload.get("customer_paid_shipping")),
+                sample=sample,
+            )
+            if not allowed:
+                append_log({"action": "refused", "amount": payload.get("amount"), "reason": reason, "rate_id": payload.get("rate_id")})
+                self._json(200, {"message": reason, "purchased": False})
+                return
+            result = buy_label(APP.env, str(payload.get("rate_id") or ""), str(settings.get("label_format") or "PDF"))
+            append_log({"action": "purchased" if result.get("ok") else "refused", "amount": payload.get("amount"), "reason": result.get("message"), "rate_id": payload.get("rate_id")})
+            self._json(200, {"message": result.get("message"), "purchased": bool(result.get("ok"))})
+            return
         if path == "/api/ship":
             self._json(200, APP.ship(payload))
             return
@@ -712,6 +753,16 @@ def self_check() -> int:
     assert "Sample" in message
     ship = App().ship({"receipt_id": "SAMPLE-1001", "confirm": "yes", "tracking": "123"})
     assert "Not sent" in ship["message"]
+    from shipping_station import decide, DEFAULT_SETTINGS
+    settings = dict(DEFAULT_SETTINGS)
+    ok, why = decide(6.4, settings, auto=False, customer_paid_shipping=True, sample=True)
+    assert not ok and "Sample" in why
+    ok, why = decide(40, settings, auto=False, customer_paid_shipping=True, sample=False)
+    assert not ok and "per-label" in why
+    ok, why = decide(9, settings, auto=True, customer_paid_shipping=False, sample=False)
+    assert not ok and "Auto-buy" in why
+    ok, why = decide(9, settings, auto=False, customer_paid_shipping=True, sample=False)
+    assert ok
     print("control center checks passed")
     return 0
 
